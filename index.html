@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookYourFun - Find the event for you !</title>
+    <link rel="icon" type="image/png" href="img/favicon.ico">
+    <link rel="stylesheet" href="css/styles.min.css">
+    
+</head>
+
+<body  id="byfApp">
+    <!-- Nav & searchbar -->
+    <nav class="navigation flex">
+        <div class="navigation__left flex align-c">
+            <!-- Burger Menu -->
+            <div class="navigation__burger">
+                <div :class="'burger-menu ' + burgerNavClass" @click="openMobileMenu">
+                    <div :class="'barre-top ' + burgerNavClass"></div>
+                    <div :class="'barre-middle ' + burgerNavClass"></div>
+                    <div :class="'barre-bottom ' + burgerNavClass"></div>
+                </div>
+            </div>
+            <!-- Logo -->
+            <a class="navigation__logo" href="index.html">BookYourFun</a>
+        </div>
+        <!-- Nav -->
+        <ul :class="'flex navigation__main ' + mobileNavClass">
+            <li id="musicLink" @click="getGenres('KZFzniwnSyZfZ7v7nJ')" data-id="KZFzniwnSyZfZ7v7nJ"><a href="#">Music</a></li>
+            <li id="artLink" @click="getGenres('KZFzniwnSyZfZ7v7na')" data-id="KZFzniwnSyZfZ7v7na"><a href="#">Arts and Theater</a></li>
+            <li id="filmLink" @click="getGenres('KZFzniwnSyZfZ7v7nn')" data-id="KZFzniwnSyZfZ7v7nn"><a href="#">Films</a></li>
+            <li id="sportLink" @click="getGenres('KZFzniwnSyZfZ7v7nE')" data-id="KZFzniwnSyZfZ7v7nE"><a href="#">Sports</a></li>
+            <li id="attractionLink" @click="getGenres('KZFzniwnSyZfZ7v7n1')" data-id="KZFzniwnSyZfZ7v7n1"><a href="#">Miscellaneous</a></li>
+            <nav class="navGenres" v-if="genres.length > 0" @blur="closeNav">
+                <ul v-show="genres.length > 0">
+                  <li v-for="(genre, index) in genres" :key="index" :data-id="genre.id" @click="listAppLaunch">{{genre.name}}</li>
+                </ul>
+                <button @click="closeNav"><i class="fa-solid fa-arrow-up"></i></button>
+                <a href="#" class="allGenres" :data-id="segment[0].id" @click="listAppLaunch">See all events in {{segment[0].name}}</a>
+            </nav>
+        </ul>
+        <!-- Searchbar -->
+        <div class="navigation__search flex  align-c">
+            <p>Search</p>
+            <div class="navigation__search__bar flex">
+                <input type="text" placeholder="Search by artist, event">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </div>
+    </nav>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__content flex-c">
+            <h2 class="header__content__title">Fête des Mères</h2>
+            <button class="header__content__btn btn" id="headerBtn">Tickets</button>
+        </div>
+    </header>
+    <!-- Main -->
+    <main class="main"></main>
+    <!-- Footer -->
+    <footer class="footer"></footer>
+    <!-- Scripts -->
+    <script src="https://kit.fontawesome.com/e6327d8d43.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.1/vue.global.min.js" integrity="sha512-adgKitI7rma1GrZi3dXfRvGXDVm8DzwbFs9UjdWeee5cslIrcgS9+PHj50Buc0i+kEXIEN9+Pu2OqikA3IJ2Xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

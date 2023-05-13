@@ -1,0 +1,56 @@
+// Wrapper
+@mixin wrapper($width,$margin-top: 0px, $margin-bottom: 0px,$margin-sides: auto){
+  width: $width;
+  margin: $margin-top $margin-sides $margin-bottom;
+}
+// Transitions
+@mixin transition($duration: .3s, $property: all, $function: ease-in-out, $delay: 0){
+  transition: $duration $property $function $delay;
+}
+// Position center
+@mixin abs_center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+@mixin flex_center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+// Hover   Color filter
+@mixin color_filter($color: black,$opacity: 0.4,$transition: .3s){
+  position: relative;
+  &:after{
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: $color;
+    opacity: 0;
+    transition: $transition all ease-in-out;
+  }
+  &:hover:after{
+    opacity: $opacity;
+  }
+}
+// Hover    Text Color
+@mixin text_color($color, $transition: .3s){
+  transition: $transition all ease-in-out;
+  &:hover{
+    color: $color;
+  }
+}
+// Hover    Link Backround
+@mixin link_backround($color, $padding1: 15px, $padding2: 25px, $transition: .2s, $border: 0, $border-color: transparent){
+  transition: $transition all ease-in-out;
+  padding: $padding1 $padding2;
+  display: inline-block;
+  &:hover{
+    background-color: $color;
+    box-shadow: inset -1px 0 0 $border-color, inset 0 -1px 0 $border-color, inset 1px 0 0 $border-color, inset 0 1px 0 $border-color;
+  }
+}

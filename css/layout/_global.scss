@@ -1,0 +1,30 @@
+///////////////////////////////////////////////
+//////////////////Global///////////////////////
+///////////////////////////////////////////////
+*{
+  margin: 0;
+  padding: 0;
+}
+li{
+  list-style-type: none;
+}
+a{
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+body{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  background-color: $c2;
+  color: $c1;
+}
+.flex{
+  display: flex;
+}
+.flex-c{
+  display: flex;
+  flex-direction: column;
+}
+.align-c{
+  align-items: center;
+}

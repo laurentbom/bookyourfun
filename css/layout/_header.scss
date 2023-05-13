@@ -1,0 +1,33 @@
+.header{
+  min-height: 30vw;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 60%, transparent 90%), url("/img/heroex.webp");
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+  position: relative;
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 20px 0px;
+  @media screen and (max-width:720px){
+    min-height: 56vw;
+  }
+  &__content{
+    margin-left: 40px;
+    padding: 40px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    align-items: flex-start;
+    gap: 20px;
+    @media screen and (max-width:720px){
+      margin-left: 20px;
+      padding: 20px;
+    }
+    &__title{
+      font-size: calc(23px + 1vw);
+      font-weight: 500;
+    }
+    &__btn{
+
+    }
+  }
+}

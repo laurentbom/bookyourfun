@@ -1,0 +1,22 @@
+.btn{
+  padding: 8px 24px;
+  background-color: $blue;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  transition: .1s all ease-in;
+  font-family: $f3;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  line-height: 22px;
+  &:focus{
+    outline: 2px solid black;
+  }
+  &:hover, &:focus{
+    background-color: darken($color: $blue, $amount: 10);
+  }
+}
+button{
+  outline: none;
+}
