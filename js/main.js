@@ -50,24 +50,23 @@ createApp({
       .then(data => {
         console.log(data.name);
         this.genres = [];
+        this.segment = [];
         for(i=0; i < 21; i++){
           let genre = data._embedded.genres[i];
           if(genre && genre.name && genre.id && genre.name != "Undefined"){
             this.genres.push({name: genre.name, id: genre.id});
           }
         };
-        let segmentName = data.name;
-        let segmentId = data.id;
         if(data.name && data.id){
-          this.segment.push({name: segmentName, id: segmentId});
+          this.segment.push({name: data.name, id: data.id});
         }
-        this.segment.push({name: segmentName, id: segmentId});
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
       if(this.isMobile){
         this.mobileNavClass = "";
+        this.burgerNavClass = "";
       }
     },
     closeNav(){
@@ -76,10 +75,10 @@ createApp({
     openMobileMenu(){
       if(this.mobileNavClass == "openMobile"){
         this.mobileNavClass = "";
-        this.burgerNavClass = ""
+        this.burgerNavClass = "";
       } else {
         this.mobileNavClass = "openMobile";
-        this.burgerNavClass = "open"
+        this.burgerNavClass = "open";
       }
     },
     listAppLaunch(){

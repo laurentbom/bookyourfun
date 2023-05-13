@@ -41,7 +41,7 @@
       flex-direction: column;
       position: fixed;
       top: 0;
-      left: -120%;
+      left: -140%;
       background-color: #fff;
       color: var(--color);
       margin: 0;
@@ -50,6 +50,7 @@
       padding-top: 80px;
       font-size: calc(20px + 1vw);
       z-index: 3;
+      transition: .3s left ease;
       &.openMobile{
         left: 0;
       }
