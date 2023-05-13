@@ -15,8 +15,10 @@ a{
 }
 body{
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: $f1;
   background-color: $c2;
   color: $c1;
+  scroll-behavior: smooth;
 }
 .flex{
   display: flex;
@@ -27,4 +29,25 @@ body{
 }
 .align-c{
   align-items: center;
+}
+/**************Texte Outline********************/
+.txt-outline{
+  // position: relative;
+  // a:after {
+  //   content: '';
+  //   position: absolute;
+  //   width: 85%;
+  //   transform: scaleX(0);
+  //   height: 2px;
+  //   bottom: 30px; //outline and text distance
+  //   left: 7.5%;
+  //   background-color: rgb(255, 255, 255);
+  //   transform-origin: bottom right;
+  //   transition: transform 0.3s ease-out;
+  //   z-index: 4;
+  // }
+  // a:hover:after {
+  //   transform: scaleX(1);
+  //   transform-origin: bottom left;
+  // }
 }

@@ -28,6 +28,9 @@
   &__logo{
     font-size: 34px;
     font-weight: 600;
+    &:focus{
+      border: 1px solid black;
+    }
     @media screen and (max-width:1359px){
       font-size: 23px;
     }
@@ -61,11 +64,11 @@
     & > li{
       padding: 40px 8px;
       cursor: pointer;
-      &:focus{
+      a:focus{
+        border: 1px solid black;
       }
-      &:hover, &:focus{
+      &:hover{
         background-color: darken($color: $blue, $amount: 10);
-        
       }
       @media screen and (max-width:1300px){
         padding: 25px 30px;
@@ -104,6 +107,13 @@
         &::placeholder{
           font-size: 18px;
         }
+        &:focus{
+          background-color: #f9f9f9;
+          outline: 2px solid black;
+          &::placeholder{
+            color: rgb(26, 25, 25);
+          }
+        }
         @media screen and (max-width:680px){
           width: 90%;
           margin-bottom: 10px;
@@ -116,11 +126,14 @@
         border: none;
         cursor: pointer;
         border-radius: 0px 5px 5px 0px;
-        .fa-arrow-up{
-
+        &:focus{
+          border: 1px solid black;
+          color: rgb(26, 25, 25);
+          outline: 1px solid black;
         }
         &:hover{
-          background-color: #b8b8b8;
+          background-color: #f9f9f9;
+          color: rgb(26, 25, 25);
         }
         @media screen and (max-width:680px){
           margin-bottom: 10px;
@@ -145,6 +158,11 @@
   padding: 50px 40px 70px;
   color: var(--color);
   box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 20px 0px;
+  font-family: $f1;
+  & > p{
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
   ul{
     columns: 3;
     padding: 0px 16px;
@@ -153,11 +171,9 @@
       border-bottom: 1px solid #BFBFBF;
       cursor: pointer;
       transition: .2s all ease;
-      a{
-        font-size: 18px;
-        font-weight: 300;
-        font-family: $f3;
-      }
+      font-size: 18px;
+      font-weight: 400;
+      
       &:hover{
        background-color: #f3f3f3; 
       }
@@ -195,6 +211,141 @@
     &:hover{
       color: var(--color);
       text-decoration: underline 2px solid var(--color);
+    }
+  }
+}
+
+
+
+
+.footer{
+  color: #fff;
+  padding: 60px 20px;
+  & > div{
+    @media screen and (min-width:1300px){
+      display: flex;
+      gap:5vw;
+    }
+  }
+  
+  .footer__top{
+    &__logo{
+      font-size: 26px;
+      font-weight: 500;
+      margin-bottom: 50px;
+      display: inline-block;
+      &:focus{
+        border: 1px solid black;
+      }
+      @media screen and (max-width:1359px){
+        font-size: 23px;
+      }
+    }
+    & > p{
+      font-size: 12px;
+      max-width: 50ch;
+      line-height: 22px;
+      margin-bottom: 60px;
+      a{
+        text-decoration: underline;
+      }
+    }
+  }
+  .footer__copyright{
+    font-size: 10px;
+    margin-top: 50px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-align: center;
+    display: block;
+  }
+}
+.footerNav{
+  @media screen and (min-width:1300px){
+    width: 100%;
+  }
+}
+.footerNav ul{
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  @media screen and (min-width:1300px){
+    flex-direction: row;
+    gap: 40px;
+    text-align: center;
+  }
+  .navFooterMobile{
+    display: block;
+    position: relative;
+    .segFooter{
+      font-weight: 400;
+      font-size: 18px;
+      font-family: $f3;
+      border-top: 1px solid #BFBFBF;
+      display: block;
+      padding: 10px;
+      white-space: nowrap;
+      @media screen and (min-width:1300px){
+        border-top: none;
+        width: 180px;
+      }
+    }
+    a:last-child{
+      border-bottom: 1px solid #5b5b5b;
+      font-size: 12px;
+      font-style: italic;
+      &:hover{
+        background-color: darken(#bebebe, $amount: 10);
+      }
+    }
+    .dropdown-menu {
+      top: 100%;
+      left: 0;
+      width: 100%;
+      transition: all 0.3s ease;
+      @media screen and (min-width:1300px){
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+      }
+      .genreFooterCss{
+        display: block;
+        padding: 10px;
+        white-space: nowrap;
+      }
+    }
+  }
+  .navFooterDesktop{
+    width: 100%;
+    .footerDS{
+      font-size: 23px;
+      display: flex;
+      gap: 80px;
+      margin-bottom: 80px;
+    }
+    .footerDG{
+      text-align: center;
+      font-size: 16px;
+      font-style: italic;
+      border: 1px solid #BFBFBF;
+      border-radius: 3px;
+      padding: 30px;
+      margin-right: 100px;
+      span{
+        align-self: flex-start;
+        margin-bottom: 20px;
+        margin-top: -40px;
+        background-color: var(--bg-footer);
+        padding: 0 5px;
+      }
+      p{
+        margin-bottom: 20px;
+        cursor: pointer;
+      }
+      &__list{
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+      }
     }
   }
 }

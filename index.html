@@ -27,12 +27,11 @@
         </div>
         <!-- Nav -->
         <ul :class="'flex navigation__main ' + mobileNavClass">
-            <li id="musicLink" @click="getGenres('KZFzniwnSyZfZ7v7nJ')" data-id="KZFzniwnSyZfZ7v7nJ"><a href="#">Music</a></li>
-            <li id="artLink" @click="getGenres('KZFzniwnSyZfZ7v7na')" data-id="KZFzniwnSyZfZ7v7na"><a href="#">Arts and Theater</a></li>
-            <li id="filmLink" @click="getGenres('KZFzniwnSyZfZ7v7nn')" data-id="KZFzniwnSyZfZ7v7nn"><a href="#">Films</a></li>
-            <li id="sportLink" @click="getGenres('KZFzniwnSyZfZ7v7nE')" data-id="KZFzniwnSyZfZ7v7nE"><a href="#">Sports</a></li>
-            <li id="attractionLink" @click="getGenres('KZFzniwnSyZfZ7v7n1')" data-id="KZFzniwnSyZfZ7v7n1"><a href="#">Miscellaneous</a></li>
-            <nav class="navGenres" v-if="genres.length > 0" @blur="closeNav">
+            <!-- Nav desktop Segments -->
+            <li v-for="(navLink, index) in navLinks" v-on:mouseover="navIsHover[index] = true" v-on:mouseout="navIsHover[index] = false" v-bind:class="{ 'txt-outline': navIsHover[index] && !isMobile }" @click="getGenres(navLink.id)" :data-id="navLink.id"><a href="#">{{navLink.name}}</a></li>
+            <!-- Nav desktop Genres -->
+            <nav class="navGenres" v-if="genres.length > 0 && !isMobile">
+                <p>Genres:</p>
                 <ul v-show="genres.length > 0">
                   <li v-for="(genre, index) in genres" :key="index" :data-id="genre.id" @click="listAppLaunch">{{genre.name}}</li>
                 </ul>
@@ -59,7 +58,44 @@
     <!-- Main -->
     <main class="main"></main>
     <!-- Footer -->
-    <footer class="footer"></footer>
+    <footer class="footer">
+        <div>
+            <div class="footer__top">
+                <a href="#" class="footer__top__logo logo">BookYourFun</a>
+                <p>Use of <a href="https://www.ticketmaster.be/">TicketMaster</a>  API for a student work. No tickets are on sale on this website, only link to other websites from the API.</p>
+                <p>If needed contact me: <a href="mailto:laurent.bomal@gmail.com">laurent.bomal@gmail.com</a></p>
+            </div>
+            <nav class="footerNav">
+                <ul>
+                    <li v-if="isMobile" v-for="(navLink, index) in navLinks" :key="index" class="navFooterMobile">
+                        <a id="segmentFooterLink" href="#segmentFooterLink" @click="getGenresFooterMobile(navLink.id)" :data-id="navLink.id" class="segFooter">{{navLink.name}}</a>
+                        <ul class="dropdown-menu" v-show="(activeLinkId === navLink.id && showDropdown)">
+                            <li v-for="(genreFooter, index) in genresFooter" :key="index"><a href="#" class="genreFooterCss">{{genreFooter.name}}</a></li>
+                            <li><a href="#" class="genreFooterCss">All</a></li>
+                        </ul>
+                    </li>
+                    <div v-else class="navFooterDesktop flex-c">
+                        <div class="footerDS">
+                            <li v-for="(navLink, index) in navLinks" :key="index">
+                                <a id="segmentFooterLinkDesktop" href="#segmentFooterLinkDesktop" @click="getGenresFooterDesktop(navLink.id)" :data-id="navLink.id" class="segFooter">{{navLink.name}}</a>
+                            </li>
+                        </div>
+                        <div class="footerDG flex-c">
+                            <span>Genres</span>
+                            <div class="footerDG__list">
+                                <p>All</p>
+                                <p v-for="(genreFooterDesktop, index) in genresFooterDesktop">{{genreFooterDesktop.name}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="footer__copyright">
+            © 2023 Laurent Bomal. Tous droits réservés.
+        </div>
+    </footer>
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/e6327d8d43.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.1/vue.global.min.js" integrity="sha512-adgKitI7rma1GrZi3dXfRvGXDVm8DzwbFs9UjdWeee5cslIrcgS9+PHj50Buc0i+kEXIEN9+Pu2OqikA3IJ2Xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
