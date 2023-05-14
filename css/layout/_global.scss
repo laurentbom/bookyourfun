@@ -19,6 +19,9 @@ body{
   background-color: $c2;
   color: $c1;
   scroll-behavior: smooth;
+  &.no-scroll{
+    overflow: hidden;
+  }
 }
 .flex{
   display: flex;

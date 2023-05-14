@@ -221,8 +221,12 @@
 .footer{
   color: #fff;
   padding: 60px 20px;
+  min-height: 65vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   & > div{
-    @media screen and (min-width:1300px){
+    @media screen and (min-width:1301px){
       display: flex;
       gap:5vw;
     }
@@ -230,7 +234,7 @@
   
   .footer__top{
     &__logo{
-      font-size: 26px;
+      font-size: 36px;
       font-weight: 500;
       margin-bottom: 50px;
       display: inline-block;
@@ -253,14 +257,14 @@
   }
   .footer__copyright{
     font-size: 10px;
-    margin-top: 50px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     text-align: center;
     display: block;
+    padding: 50px 0px 0px;
   }
 }
 .footerNav{
-  @media screen and (min-width:1300px){
+  @media screen and (min-width:1301px){
     width: 100%;
   }
 }
@@ -269,7 +273,7 @@
   display: flex;
   flex-direction: column;
   color: #fff;
-  @media screen and (min-width:1300px){
+  @media screen and (min-width:1301px){
     flex-direction: row;
     gap: 40px;
     text-align: center;
@@ -285,7 +289,7 @@
       display: block;
       padding: 10px;
       white-space: nowrap;
-      @media screen and (min-width:1300px){
+      @media screen and (min-width:1301px){
         border-top: none;
         width: 180px;
       }
@@ -303,7 +307,7 @@
       left: 0;
       width: 100%;
       transition: all 0.3s ease;
-      @media screen and (min-width:1300px){
+      @media screen and (min-width:1301px){
         display: flex;
         flex-direction: column;
         gap: 0px;
@@ -318,23 +322,25 @@
   .navFooterDesktop{
     width: 100%;
     .footerDS{
-      font-size: 23px;
+      font-size: 26px;
       display: flex;
       gap: 80px;
-      margin-bottom: 80px;
+      margin-bottom: 50px;
+      margin-top: 8px;
     }
     .footerDG{
       text-align: center;
       font-size: 16px;
-      font-style: italic;
-      border: 1px solid #BFBFBF;
-      border-radius: 3px;
-      padding: 30px;
+      border: 1px  #BFBFBF;
+      border-style: dashed;
+      border-radius: 4px;
+      padding: 30px 0px 10px;
       margin-right: 100px;
       span{
         align-self: flex-start;
         margin-bottom: 20px;
         margin-top: -40px;
+        margin-left: 10px;
         background-color: var(--bg-footer);
         padding: 0 5px;
       }
@@ -345,6 +351,12 @@
       &__list{
         display: grid;
         grid-template-columns: repeat(4,1fr);
+        & > p{
+          &:hover{
+            text-decoration: underline;
+            text-underline-offset: 5px;
+          }
+        }
       }
     }
   }

@@ -63,6 +63,7 @@ createApp({
       ],
       genres: [],
       genresFooter: [],
+      genresFooterDesktop: [],
       segment: [],
       mobileNavClass : "",
       burgerNavClass : "",
@@ -70,7 +71,6 @@ createApp({
       navIsHover: {},
       showDropdown: false,
       activeLinkId: "",
-      genresFooterDesktop: [],
     }
   },
 
@@ -117,14 +117,18 @@ createApp({
     },
     closeNav(){
       this.genres = [];
+      this.mobileNavClass = "";
+      this.burgerNavClass = "";
     },
     openMobileMenu(){
       if(this.mobileNavClass == "openMobile"){
         this.mobileNavClass = "";
         this.burgerNavClass = "";
+        document.body.classList.remove('no-scroll');
       } else {
         this.mobileNavClass = "openMobile";
         this.burgerNavClass = "open";
+        document.body.classList.add('no-scroll');
       }
     },
     listAppLaunch(){
