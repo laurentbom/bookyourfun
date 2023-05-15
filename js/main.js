@@ -119,6 +119,7 @@ createApp({
       this.genres = [];
       this.mobileNavClass = "";
       this.burgerNavClass = "";
+      document.body.classList.remove('no-scroll');
     },
     openMobileMenu(){
       if(this.mobileNavClass == "openMobile"){
