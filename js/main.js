@@ -42,23 +42,23 @@ createApp({
       navLinks : [
         {
           name : "Music",
-          id : "KZFzniwnSyZfZ7v7nJ",
+          id : idSegmentMusic,
         },
         {
           name : "Arts and Theater",
-          id : "KZFzniwnSyZfZ7v7na",
+          id : idSegmentArt,
         },
         {
           name : "Films",
-          id : "KZFzniwnSyZfZ7v7nn",
+          id : idSegmentFilms,
         },
         {
           name : "Sports",
-          id : "KZFzniwnSyZfZ7v7nE",
+          id : idSegmentSport,
         },
         {
           name : "Miscellaneous",
-          id : "KZFzniwnSyZfZ7v7n1",
+          id : idSegmentAttractions,
         }
       ],
       genres: [],
@@ -108,19 +108,19 @@ createApp({
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
-
-      /////////////////Mobile menu/////////////////
-      if(this.isMobile){
-        this.mobileNavClass = "";
-        this.burgerNavClass = "";
-      }
+      // if(this.isMobile){
+      //   this.mobileNavClass = "";
+      //   this.burgerNavClass = "";
+      // }
     },
+    /////////////////Close navs/////////////////
     closeNav(){
       this.genres = [];
       this.mobileNavClass = "";
       this.burgerNavClass = "";
       document.body.classList.remove('no-scroll');
     },
+    /////////////////Mobile menu/////////////////
     openMobileMenu(){
       if(this.mobileNavClass == "openMobile"){
         this.mobileNavClass = "";
