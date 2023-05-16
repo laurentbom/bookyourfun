@@ -27,14 +27,14 @@
             <a class="navigation__logo" href="index.html">BookYourFun</a>
         </div>
         <!-- Nav -->
-        <ul :class="'flex navigation__main ' + mobileNavClass">
+        <ul :class="'flex navigation__main ' + mobileNavClass" v-click-outside="closeNav">
             <!-- Nav desktop Segments -->
-            <li v-for="(navLink, index) in navLinks" v-on:mouseover="navIsHover[index] = true" v-on:mouseout="navIsHover[index] = false" v-bind:class="{ 'txt-outline': navIsHover[index] && !isMobile }" @click="getGenres(navLink.id)" :data-id="navLink.id"><a href="#">{{navLink.name}}</a></li>
+            <li v-for="(navLink, index) in navLinks" @click="getGenres(navLink.id)" :data-id="navLink.id"><a href="#">{{navLink.name}}</a></li>
             <!-- Nav desktop Genres -->
             <nav class="navGenres" v-if="genres.length > 0 && !isMobile">
                 <p>Genres:</p>
                 <ul v-show="genres.length > 0">
-                  <li v-for="(genre, index) in genres" :key="index" :data-id="genre.id" @click="listAppLaunch">{{genre.name}}</li>
+                    <li v-for="(genre, index) in genres" :key="index" :data-id="genre.id" @click="listAppLaunch">{{genre.name}}</li>
                 </ul>
                 <button @click="closeNav"><i class="fa-solid fa-arrow-up"></i></button>
                 <a href="#" class="allGenres" :data-id="segment[0].id" @click="listAppLaunch">See all events in {{segment[0].name}}</a>
@@ -61,7 +61,107 @@
         <!-- Main container -->
         <div class="main__container">
             <!-- Queries section -->
-            <section class="queries"></section>
+            <section v-show="isQuerie" class="queries">
+                <div class="queries__title flex">
+                    <div class="flex-c">
+                        <h3>Recherche</h3>
+                        <span>x Résultats</span>
+                    </div>
+                    <button class="closeQueries" @click="closeQueries"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="queriesComponent">
+                    <ul class="queries__container">
+                        <li>
+                            <div class="querieDate">MAI<br>16</div>
+                            <div class="querieInfos">
+                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
+                                <div class="querieName">Double Dance: Ash - 55</div>
+                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
+                            </div>
+                            <a href="#" class="querieMoreInfo btn">
+                                Infos
+                            </a>
+                            <a href="#" class="querieMoreInfoMobile">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="querieDate">MAI<br>16</div>
+                            <div class="querieInfos">
+                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
+                                <div class="querieName">Double Dance: Ash - 55</div>
+                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
+                            </div>
+                            <a href="#" class="querieMoreInfo btn">
+                                Infos
+                            </a>
+                            <a href="#" class="querieMoreInfoMobile">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="querieDate">MAI<br>16</div>
+                            <div class="querieInfos">
+                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
+                                <div class="querieName">Double Dance: Ash - 55</div>
+                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
+                            </div>
+                            <a href="#" class="querieMoreInfo btn">
+                                Infos
+                            </a>
+                            <a href="#" class="querieMoreInfoMobile">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="querieDate">MAI<br>16</div>
+                            <div class="querieInfos">
+                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
+                                <div class="querieName">Double Dance: Ash - 55</div>
+                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
+                            </div>
+                            <a href="#" class="querieMoreInfo btn">
+                                Infos
+                            </a>
+                            <a href="#" class="querieMoreInfoMobile">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="querieDate">MAI<br>16</div>
+                            <div class="querieInfos">
+                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
+                                <div class="querieName">Double Dance: Ash - 55</div>
+                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
+                            </div>
+                            <a href="#" class="querieMoreInfo btn">
+                                Infos
+                            </a>
+                            <a href="#" class="querieMoreInfoMobile">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="querieDate">MAI<br>16</div>
+                            <div class="querieInfos">
+                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
+                                <div class="querieName">Double Dance: Ash - 55</div>
+                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
+                            </div>
+                            <a href="#" class="querieMoreInfo btn">
+                                Infos
+                            </a>
+                            <a href="#" class="querieMoreInfoMobile">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="queriesComponent__pagination">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                </div>
+            </section>
             <!-- Upcoming section -->
             <section class="upcomingSuggests">
                 <!-- Title -->
@@ -78,7 +178,20 @@
                             <!-- Infos -->
                             <span>Concert</span>
                             <!-- Artist -->
-                            <p>50 Cent</p>
+                            <p>Artist</p>
+                        </a>
+                    </li>
+                    <!-- List Item -->
+                    <li class="upcomingSuggests__item">
+                        <a href="#">
+                            <!-- Image -->
+                            <div class="upcomingSuggests__img">
+                                <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                            </div>
+                            <!-- Infos -->
+                            <span>Concert</span>
+                            <!-- Artist -->
+                            <p>Artist</p>
                         </a>
                     </li>
                     <!-- List Item -->
@@ -91,7 +204,7 @@
                             <!-- Infos -->
                             <span>Concert</span>
                             <!-- Artist -->
-                            <p>50 Cent</p>
+                            <p>Artist</p>
                         </a>
                     </li>
                     <!-- List Item -->
@@ -104,43 +217,181 @@
                             <!-- Infos -->
                             <span>Concert</span>
                             <!-- Artist -->
-                            <p>50 Cent</p>
-                        </a>
-                    </li>
-                    <!-- List Item -->
-                    <li class="upcomingSuggests__item">
-                        <a href="#">
-                            <!-- Image -->
-                            <div class="upcomingSuggests__img">
-                                <img src="img/hpimgex.webp" alt="">
-                            </div>
-                            <!-- Infos -->
-                            <span>Concert</span>
-                            <!-- Artist -->
-                            <p>50 Cent</p>
+                            <p>Artist</p>
                         </a>
                     </li>
                 </ul>
             </section>
             <!-- Music section -->
             <section class="musicSuggests">
+                <!-- Line -->
+                <div class="greyLine"></div>
                 <h3>Musics</h3>
                 <ul>
                     <li>
                         <a href="">
-
+                            <div class="suggest__img">
+                                <img src="img/4e-la-petite-mort-pions.jpeg" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/hpimgex.webp" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
                         </a>
                     </li>
                 </ul>
             </section>
             <!-- Arts section -->
-            <section class="artSuggests"></section>
+            <section class="artSuggests">
+                <!-- Line -->
+                <div class="greyLine"></div>
+                <h3>Arts & Theater</h3>
+                <ul>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/hpimgex.webp" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/hpimgex.webp" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    </li>
+                </ul>
+            </section>
             <!-- Sports section -->
-            <section class="sportSuggests"></section>
+            <section class="sportSuggests">
+                <!-- Line -->
+                <div class="greyLine"></div>
+                <h3>Sports</h3>
+                <ul>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/hpimgex.webp" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <div class="suggest__img">
+                                <img src="img/hpimgex.webp" alt="">
+                            </div>
+                            <span>Concert</span>
+                            <p>Artist</p>
+                            <p class="resumt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis labore iure modi similique amet molestias recusandae eos autem quasi sed? Veniam debitis dolorum deserunt maiores nam fugiat, iusto magnam eius?</p>
+                            <a href="#" class="ticketLink">Tickets</a>
+                        </a>
+                    </li>
+                </ul>
+            </section>
         </div>
         <!-- Aside Suggests -->
         <aside class="main__aside">
-            <h3>Suggests</h3>
+            <h3>More</h3>
+            <ul class="suggests">
+                <li>
+                    <a href="#">
+                        <div class="aside__img">
+                            <img src="img/hpimgex.webp" alt="">
+                        </div>
+                        <span>Artist</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="aside__img">
+                            <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                        </div>
+                        <span>Artist</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="aside__img">
+                            <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                        </div>
+                        <span>Artist</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="aside__img">
+                            <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                        </div>
+                        <span>Artist</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="aside__img">
+                            <img src="img/cat-gc2a8d0997_640.jpg" alt="">
+                        </div>
+                        <span>Artist</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="greyLine"></div>
+            <div class="addAside">
+                <a href="#">Your add here</a>
+            </div>
         </aside>
     </main>
     <!-- Footer -->

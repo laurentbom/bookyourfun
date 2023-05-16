@@ -20,7 +20,7 @@ const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
 
 function monApi2(idSegments){
-  fetch(`${apiUrl}/classifications?apikey=${apiKey}?countryCode=be`)
+  fetch(`${apiUrl}/classifications?apikey=${apiKey}&countryCode=be`)
   .then(response => response.json())
   .then(data => {
     console.log(data);
@@ -71,6 +71,7 @@ createApp({
       navIsHover: {},
       showDropdown: false,
       activeLinkId: "",
+      isQuerie: true,
     }
   },
 
@@ -166,7 +167,7 @@ createApp({
     },
     ////////////////Get segments & genres for footer nav////////////////////
     getGenresFooterDesktop(idSegments) {
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}`)
+      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
       .then(response => response.json())
       .then(data => {
         this.genresFooterDesktop = [];
@@ -181,8 +182,12 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
+    closeQueries(){
+      this.isQuerie = false;
+      console.log(isQuerie)
+    },
   },
   mounted(){
     this.getGenresFooterDesktop(idSegmentSport);
-  }
+  },
 }).mount("#byfApp")

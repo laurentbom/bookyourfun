@@ -1,0 +1,121 @@
+.queries{
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  &__title{
+    background-color: #F6F6F6;
+    padding: 12px 16px;
+    justify-content: space-between;
+    .closeQueries{
+      color: var(--color);
+      border: none;
+      background-color: transparent;
+      font-weight: 700;
+      font-size: 30px;
+      cursor: pointer;
+    }
+    h3{
+      font-size: 18px;
+      text-transform: none;
+      font-weight: 600;
+    }
+    span{
+      font-size: 14px;
+      color: rgb(100, 100, 100);
+      font-weight: 500;
+    }
+  }
+  &__container{
+    padding: 16px;
+    li:not(:last-child){
+      border-bottom: 1px solid #BFBFBF;
+    }
+    li{
+      padding: 20px 0px;
+      display: flex;
+      .querieDate{
+        padding: 0px 20px 20px 20px;
+        text-align: center;
+      }
+      .querieInfos{
+        .querieHour{
+          color: rgb(100, 100, 100);
+          font-size: 15px;
+          span:nth-of-type(1)::after{
+            content:"";
+            top: 50%;
+            display: inline-block;
+            width: 0.25em;
+            height: 0.25em;
+            margin: 0px 0.4em;
+            border-radius: 50%;
+            background-color: currentcolor;
+            transform: translateY(-50%);
+            content: "";
+          }
+        }
+        .querieName{
+          font-size: 16px;
+          font-weight: 600;
+        }
+        .querieVenue{
+          color: rgb(100, 100, 100);
+          font-size: 15px;
+          span:nth-of-type(1)::after{
+            content:"";
+            top: 50%;
+            display: inline-block;
+            width: 0.25em;
+            height: 0.25em;
+            margin: 0px 0.4em;
+            border-radius: 50%;
+            background-color: currentcolor;
+            transform: translateY(-50%);
+            content: "";
+          }
+        }
+      }
+      .querieMoreInfo{
+        margin-left: auto;
+        align-self: center;
+        @media screen and (max-width:899px){
+          display: none;
+        }
+      }
+      .querieMoreInfoMobile{
+        @media screen and (min-width:900px){
+          display: none;
+        }
+        margin-left: auto;
+        align-self: center;
+        padding: 8px 9px;
+        border-radius: 100%;
+        background-color: $blue;
+        color: #fff;
+        border: 2px solid $blue;
+        transition: .2s all ease-in-out;
+        margin-left: 5px;
+        &:hover{
+          color: $blue;
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+.queriesComponent__pagination{
+  text-align: center;
+  i{
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-size: 30px;
+  }
+  i:first-child{
+    margin-right: 5px;
+  }
+  i:nth-of-type(2){
+    margin-left: 5px;
+  }
+}

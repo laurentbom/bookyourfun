@@ -52,7 +52,7 @@
       height: 100vh;
       padding-top: 80px;
       font-size: calc(20px + 1vw);
-      z-index: 3;
+      z-index: 4;
       transition: .3s left ease;
       &.openMobile{
         left: 0;
