@@ -177,7 +177,7 @@ createApp({
     },
     ////////////////Get segments & genres for footer nav Mobile////////////////////
     getGenresFooterDesktop(idSegments) {
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=en`)
+      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
       .then(response => response.json())
       .then(data => {
         this.genresFooterDesktop = [];
