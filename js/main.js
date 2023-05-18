@@ -67,6 +67,9 @@ createApp({
       hpDatasSuggest: [],
       urlImgHeader: "",
       titleHeader: "",
+      searchQuery: "",
+      searchResults: [],
+      searchAllResults: [],
     }
   },
 
@@ -101,7 +104,6 @@ createApp({
     // }, 500);
   },
   methods : {
-
     ////////////////Get segments & genres for main nav////////////////////
     getGenres(idSegments){
       fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
@@ -130,6 +132,8 @@ createApp({
       this.mobileNavClass = "";
       this.burgerNavClass = "";
       document.body.classList.remove('no-scroll');
+      this.searchResults = [];
+      this.searchQuery = [];
     },
     /////////////////Mobile menu/////////////////
     openMobileMenu(){
@@ -145,6 +149,7 @@ createApp({
     },
     listAppLaunch(){
       this.genres = [];
+      this.isQuerie = true;
     },
     ////////////////Get segments & genres for footer nav Desktop////////////////////
     getGenresFooterMobile(idSegments) {
@@ -181,7 +186,7 @@ createApp({
       .then(response => response.json())
       .then(data => {
         this.genresFooterDesktop = [];
-        for(i=0; i < 20; i++){
+        for(i=0; i < 19; i++){
           let genreFooterDesktop = data._embedded.genres[i];
           if(genreFooterDesktop && genreFooterDesktop.name && genreFooterDesktop.id && genreFooterDesktop.name != "Undefined"){
             this.genresFooterDesktop.push({name: genreFooterDesktop.name, id: genreFooterDesktop.id});
@@ -272,6 +277,40 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
+    ////////////////Search suggestions////////////////////
+    performSearch() {
+      clearTimeout(this.debounceTimer); // Annuler le délai précédent
+
+      if (this.searchQuery.length >= 2) {
+        // Définir un nouveau délai de 300 millisecondes avant d'effectuer la requête API
+        this.debounceTimer = setTimeout(() => {
+          fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&includeSpellcheck=yes&countryCode=be&locale=fr`)
+            .then(response => response.json())
+            .then(data => {
+              if (data._embedded.events != undefined) {
+                this.searchAllResults = data._embedded.events;
+
+                // Filtrer les événements par nom unique
+                const uniqueNames = new Set();
+                this.searchResults = this.searchAllResults.filter(event => {
+                  const lowercaseName = event.name.toLowerCase();
+                  if (!uniqueNames.has(lowercaseName)) {
+                    uniqueNames.add(lowercaseName);
+                    return true;
+                  }
+                  return false;
+                });
+              }
+            })
+            .catch(error => {
+              console.error('Erreur lors de la recherche:', error);
+              this.searchResults = []; // Réinitialiser les résultats en cas d'erreur
+            });
+        }, 400); // Délai de latence de 300 millisecondes
+      } else {
+        this.searchResults = []; // Réinitialiser les résultats si la requête est trop courte
+      }
+    }
   },
   mounted(){
   },

@@ -93,6 +93,32 @@
       }
     }
     &__bar{
+      position: relative;
+      & > ul{
+        position: absolute;
+        top: 50px;
+        left: 0;
+        color: rgb(26, 25, 25);
+        background-color: #fff;
+        width: 100%;
+        z-index: 3;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: rgba(0,0,0,.3) -4px 4px 8px 0px;
+        .searchInputInfo{
+          font-style: italic;
+          font-weight: 700;
+        }
+        li{
+          cursor: pointer;
+          padding: 12px 16px;
+        }
+        li:not(:first-child):hover{
+          color: black;
+            background-color: #f9f9f9;
+        }
+        
+      }
       input,button{
         border: none;
       }

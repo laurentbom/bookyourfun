@@ -44,7 +44,12 @@
         <div class="navigation__search flex  align-c">
             <p>Recherche</p>
             <div class="navigation__search__bar flex">
-                <input type="text" placeholder="Recherche par artiste, événement">
+                <input v-model="searchQuery" @input="performSearch" type="text" placeholder="Recherche par artiste, événement">
+                <ul>
+                    <li v-if="searchQuery.length >= 1 && searchResults.length == 0" class="searchInputInfo">Taper au moins un mot</li>
+                    <li v-if="searchResults.length > 0" class="searchInputInfo">Suggestions</li>
+                    <li  v-if="searchResults.length > 0" v-for="searchResult in searchResults" :key="searchResult.id"><a href="#">{{searchResult.name}}</a></li>
+                </ul>
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </div>
@@ -61,7 +66,7 @@
         <!-- Main container -->
         <div class="main__container">
             <!-- Queries section -->
-            <section v-show="isQuerie" class="queries">
+            <section v-show="isQuerie" class="queries" id="querySection">
                 <div class="queries__title flex">
                     <div class="flex-c">
                         <h3>Recherche</h3>
