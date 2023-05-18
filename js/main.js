@@ -56,7 +56,7 @@ createApp({
       navIsHover: {},
       showDropdown: false,
       activeLinkId: "",
-      isQuerie: true,
+      isQuerie: false,
       hpDatasUpcoming: [],
       hpDatasMusic: [],
       hpDatasArt: [],
@@ -79,7 +79,6 @@ createApp({
     })
     setTimeout(() => {
       this.getGenresFooterDesktop(idSegmentMusic);
-      this.getGenresFooterMobile(idSegmentMusic);
     }, 3000);
 
     setTimeout(() => {
@@ -94,9 +93,9 @@ createApp({
       this.getHomepageDatas("this.hpDatasSport", idSegmentSport, 'be', 'fr');
     }, 2000);
   
-    setTimeout(() => {
+    // setTimeout(() => {
       this.getHomepageDatas2('be', 'en');
-    }, 500);
+    // }, 500);
   },
   methods : {
 
