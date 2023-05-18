@@ -37,14 +37,14 @@
                     <li v-for="(genre, index) in genres" :key="index" :data-id="genre.id" @click="listAppLaunch">{{genre.name}}</li>
                 </ul>
                 <button @click="closeNav"><i class="fa-solid fa-arrow-up"></i></button>
-                <a href="#" class="allGenres" :data-id="segment[0].id" @click="listAppLaunch">See all events in {{segment[0].name}}</a>
+                <a href="#" class="allGenres" :data-id="segment[0].id" @click="listAppLaunch">Voir tous les événements dans {{segment[0].name}}</a>
             </nav>
         </ul>
         <!-- Searchbar -->
         <div class="navigation__search flex  align-c">
-            <p>Search</p>
+            <p>Recherche</p>
             <div class="navigation__search__bar flex">
-                <input type="text" placeholder="Search by artist, event">
+                <input type="text" placeholder="Recherche par artiste, événement">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </div>
