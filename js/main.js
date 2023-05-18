@@ -97,7 +97,7 @@ createApp({
     }, 2000);
   
     // setTimeout(() => {
-      this.getHomepageDatas2('be', 'en');
+      this.getHomepageDatas2('be', 'fr');
     // }, 500);
   },
   methods : {
