@@ -306,7 +306,7 @@
                         <a id="segmentFooterLink" href="#segmentFooterLink" @click="getGenresFooterMobile(navLink.id)" :data-id="navLink.id" class="segFooter">{{navLink.name}}</a>
                         <ul class="dropdown-menu" v-show="(activeLinkId === navLink.id && showDropdown)">
                             <li v-for="(genreFooter, index) in genresFooter" :key="index"><a href="#" class="genreFooterCss" :data-id="genreFooter.id">{{genreFooter.name}}</a></li>
-                            <li><a href="#" class="genreFooterCss">All</a></li>
+                            <li><a href="#" class="genreFooterCss">Tous</a></li>
                         </ul>
                     </li>
                     <div v-else class="navFooterDesktop flex-c">
@@ -318,7 +318,7 @@
                         <div class="footerDG flex-c">
                             <span>Genres</span>
                             <div class="footerDG__list">
-                                <p>All</p>
+                                <p>Tous</p>
                                 <p v-for="(genreFooterDesktop, index) in genresFooterDesktop" :data-id="genreFooterDesktop.id" class="fade">{{genreFooterDesktop.name}}</p>
                             </div>
                         </div>
