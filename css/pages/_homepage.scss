@@ -105,6 +105,7 @@
     position: relative;
     width: 100%;
     height: 20vw;
+    overflow: hidden;
     &::before{
       content: "";
       width: 100%;
@@ -116,8 +117,10 @@
       background-image: linear-gradient(90deg, rgb(70, 117, 232), rgb(2, 108, 223));
       transition: opacity 0.4s cubic-bezier(0.1, 0.85, 0.25, 1) 0s;
       opacity: 0;
+      z-index: 2;
     }
     img{
+      transition: .3s transform ease-in-out;
       width: 100%;
       height: 100%;
       border-radius: 4px;
@@ -156,6 +159,8 @@
       width: calc(100% / 3);
       padding: 0px 5px;
       color: #646464;
+      display: flex;
+      flex-direction: column;
       & > a{
         display: inline-block;
         width: 100%;
@@ -165,6 +170,9 @@
           }
           .suggest__img{
             box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 3px;
+            img{
+              transform: scale(1.1);
+            }
           }
           p:nth-of-type(1){
             color: #0151A7;
@@ -172,11 +180,16 @@
           .ticketLink{
             color: #fff;
             background-color: var(--blue);
+            margin-top: auto;
+            display: inline-block;
           }
         }
       }
       span{
-        
+        display: inline-block;
+        &::first-letter{
+          text-transform: uppercase;
+        }
         font-size: 15px;
         font-weight: 300;
         margin-left: 8px;
@@ -208,6 +221,9 @@
         padding: 8px 12px;
         border-radius: 4px;
         transition: .2s all ease-in-out;
+        margin-top: auto;
+        display: inline-block;
+        align-self: flex-start;
         &:hover{
           background-color: var(--blue);
           color: #fff;
@@ -220,6 +236,8 @@
         margin-bottom: 20px;
         width: 100%;
         height: 15vw;
+        overflow: hidden;
+        border-radius: 4px;
         &::before{
           content: "";
           width: 100%;
@@ -231,14 +249,15 @@
           background-image: linear-gradient(90deg, rgb(70, 117, 232), rgb(2, 108, 223));
           transition: opacity 0.4s cubic-bezier(0.1, 0.85, 0.25, 1) 0s;
           opacity: 0;
+          z-index: 2;
         }
         img{
           width: 100%;
           height: 100%;
-          border-radius: 4px;
           display: block;
           object-fit: cover;
           object-position: center;
+          transition: .3s transform ease-in-out;
         }
       }
     }
@@ -294,6 +313,9 @@
         width: 100%;
         height: 8vw;
         position: relative;
+        box-shadow: rgba(0,0,0,.2) 0px 2px 4px;
+        overflow: hidden;
+        border-radius: 4px;
         &::before{
           content: "";
           width: 100%;
@@ -305,14 +327,15 @@
           background-image: linear-gradient(90deg, rgb(70, 117, 232), rgb(2, 108, 223));
           transition: opacity 0.4s cubic-bezier(0.1, 0.85, 0.25, 1) 0s;
           opacity: 0;
+          z-index: 2;
         }
         img{
           width: 100%;
           height: 100%;
-          border-radius: 4px;
           display: block;
           object-fit: cover;
           object-position: center;
+          transition: .3s transform ease-in-out;
         }
       }
     }
@@ -320,6 +343,9 @@
       .aside__img{
         transition: box-shadow 0.4s cubic-bezier(0.1, 0.85, 0.25, 1) 0s;
         box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 3px;
+        img{
+          transform: scale(1.1);
+        }
         &::before{
           opacity: 0.4;
         }

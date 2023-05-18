@@ -18,21 +18,6 @@ const idSegmentArt = "KZFzniwnSyZfZ7v7na";
 const idSegmentAttractions = "KZFzniwnSyZfZ7v7n1";
 const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
-
-function monApi2(idSegments){
-  fetch(`${apiUrl}/classifications?apikey=${apiKey}&countryCode=be`)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.error("Erreur lors de la récupération des données :", error); 
-  });
-}
-
-
-// monApi2();
-
 ////////////////////App Vue////////////////////////
 const {createApp} = Vue;
 
@@ -41,11 +26,11 @@ createApp({
     return{
       navLinks : [
         {
-          name : "Music",
+          name : "Musique",
           id : idSegmentMusic,
         },
         {
-          name : "Arts and Theater",
+          name : "Arts et théâtre",
           id : idSegmentArt,
         },
         {
@@ -57,7 +42,7 @@ createApp({
           id : idSegmentSport,
         },
         {
-          name : "Miscellaneous",
+          name : "Divers",
           id : idSegmentAttractions,
         }
       ],
@@ -72,6 +57,13 @@ createApp({
       showDropdown: false,
       activeLinkId: "",
       isQuerie: true,
+      hpDatasUpcoming: [],
+      hpDatasMusic: [],
+      hpDatasArt: [],
+      hpDatasSport: [],
+      hpDatasSuggest: [],
+      urlImgHeader: "",
+      titleHeader: "",
     }
   },
 
@@ -85,15 +77,35 @@ createApp({
     mediaQuery.addEventListener('change', () => {
       this.isMobile = mediaQuery.matches
     })
+    setTimeout(() => {
+      this.getGenresFooterDesktop(idSegmentMusic);
+      this.getGenresFooterMobile(idSegmentMusic);
+    }, 3000);
+
+    setTimeout(() => {
+    this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic, 'be', 'fr');
+    }, 1000);
+  
+    setTimeout(() => {
+      this.getHomepageDatas("this.hpDatasArt", idSegmentArt, 'be', 'fr');
+    }, 1500);
+  
+    setTimeout(() => {
+      this.getHomepageDatas("this.hpDatasSport", idSegmentSport, 'be', 'fr');
+    }, 2000);
+  
+    setTimeout(() => {
+      this.getHomepageDatas2('be', 'en');
+    }, 500);
   },
   methods : {
 
     ////////////////Get segments & genres for main nav////////////////////
     getGenres(idSegments){
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}`)
+      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
       .then(response => response.json())
       .then(data => {
-        console.log(data.name);
+        // console.log(data);
         this.genres = [];
         this.segment = [];
         for(i=0; i < 21; i++){
@@ -109,10 +121,6 @@ createApp({
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
-      // if(this.isMobile){
-      //   this.mobileNavClass = "";
-      //   this.burgerNavClass = "";
-      // }
     },
     /////////////////Close navs/////////////////
     closeNav(){
@@ -149,10 +157,10 @@ createApp({
         this.activeLinkId = idSegments;
       }
 
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}`)
+      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
       .then(response => response.json())
       .then(data => {
-        console.log(data.name);
+        // console.log(data);
         this.genresFooter = [];
         for(i=0; i < 6; i++){
           let genreFooter = data._embedded.genres[i];
@@ -167,7 +175,7 @@ createApp({
     },
     ////////////////Get segments & genres for footer nav////////////////////
     getGenresFooterDesktop(idSegments) {
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
+      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=en`)
       .then(response => response.json())
       .then(data => {
         this.genresFooterDesktop = [];
@@ -182,12 +190,141 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
+    ////////////////Close Queries////////////////////
     closeQueries(){
       this.isQuerie = false;
-      console.log(isQuerie)
+    },
+    ////////////////Get Homepage Datas////////////////////
+    getHomepageDatas(section,segment,pays,langue){
+      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${pays}&sort=random&locale=${langue}`)
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data)
+        // for(i=0; i < 3; i++){
+        //   let event = data._embedded.events[i];
+        //   if(event && event.name && event.id && event.name != "Undefined"){
+        //     section.push({
+        //       name: event.name,
+        //       id: event.id,
+        //       heroImg: event.images[5],
+        //       type: event.classifications[0].genre.name,
+        //       date: event.dates.start.localDate,
+        //     });
+        //   }
+        // }
+        // console.log(data)
+        const filteredEvents = [];
+
+        // Filtrer les événements avec des noms différents
+        const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
+        for (const event of data._embedded.events) {
+          if (!eventNames.has(event.name)) {
+            filteredEvents.push(event);
+            eventNames.add(event.name);
+          }
+
+          // Sortir de la boucle lorsque 4 événements ont été récupérés
+          if (filteredEvents.length === 3) {
+            break;
+          }
+        }
+
+        if(section == "this.hpDatasMusic"){
+          this.hpDatasMusic = filteredEvents;
+          // console.log(this.hpDatasMusic);
+        } 
+        if(section == "this.hpDatasArt"){
+          this.hpDatasArt = filteredEvents;
+          // console.log(this.hpDatasArt);
+        } 
+        if(section == "this.hpDatasSport"){
+          this.hpDatasSport = filteredEvents;
+          // console.log(this.hpDatasSport);
+        }
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des données :", error); 
+      });
+    },
+    getHomepageDatas2(pays,langue){
+      fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${pays}&sort=date,asc&locale=${langue}`)
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data)
+        const filteredEvents = [];
+
+        // Filtrer les événements avec des noms différents
+        const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
+        for (const event of data._embedded.events) {
+          if (!eventNames.has(event.name)) {
+            filteredEvents.push(event);
+            eventNames.add(event.name);
+          }
+
+          // Sortir de la boucle lorsque 4 événements ont été récupérés
+          if (filteredEvents.length === 4) {
+            break;
+          }
+        }
+        this.hpDatasUpcoming = filteredEvents; // Stocker les événements filtrés dans le tableau Vue
+        // console.log(this.hpDatasUpcoming[0].images[5].url);
+        this.urlImgHeader = this.hpDatasUpcoming[0].images[5].url;
+        this.titleHeader = this.hpDatasUpcoming[0].name;
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des données :", error); 
+      });
+      fetch(`${apiUrl}/suggest?apikey=${apiKey}&resource=events&countryCode=${pays}&locale=${langue}`)
+      .then(response => response.json())
+      .then(data => {
+        this.hpDatasSuggest = data._embedded.events;
+        // console.log(this.hpDatasSuggest)
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des données :", error); 
+      });
     },
   },
   mounted(){
-    this.getGenresFooterDesktop(idSegmentSport);
+    
+    
+    // const interval1 = setInterval(() => {
+    //   this.getHomepageDatas(this.hpDatasMusic, idSegmentMusic, 'be', 'fr');
+    // }, 200);
+
+    // const interval2 = setInterval(() => {
+    //   this.getHomepageDatas(this.hpDatasArt, idSegmentArt, 'be', 'fr');
+    // }, 400);
+
+    // const interval3 = setInterval(() => {
+    //   this.getHomepageDatas(this.hpDatasSport, idSegmentSport, 'be', 'fr');
+    // }, 600);
+
+    // const interval4 = setInterval(() => {
+    //   this.getHomepageDatas2('be', 'en');
+    // }, 800);
+
+    // // Arrêter les intervalles après un certain temps
+    // setTimeout(() => {
+    //   clearInterval(interval1);
+    //   clearInterval(interval2);
+    //   clearInterval(interval3);
+    //   clearInterval(interval4);
+    // }, 1000);
+    // setTimeout(() => {
+    //   this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic, 'be', 'fr');
+    // // }, 1000);
+  
+    // // setTimeout(() => {
+    //   this.getHomepageDatas("this.hpDatasArt", idSegmentArt, 'be', 'fr');
+    // // }, 1500);
+  
+    // // setTimeout(() => {
+    //   this.getHomepageDatas("this.hpDatasSport", idSegmentSport, 'be', 'fr');
+    // // }, 500);
+  
+    // setTimeout(() => {
+    //   this.getHomepageDatas2('be', 'en');
+    // }, 500);
   },
 }).mount("#byfApp")
