@@ -3,10 +3,13 @@
 // Laurent Bomal 2023
 // Vue.js
 // 
-// - Responsive Treshold
+// - Responsive Treshold & delay request API
 // - Get segments & genres for main nav
 // - Mobile menu
-// - Get segments & genres for footer nav
+// - Get segments & genres for footer nav Desktop
+// - Get segments & genres for footer nav Mobile
+// - Get Homepage Data
+// 
 //////////////////////////////////////////////////////
 
 const apiUrl = "https://app.ticketmaster.com/discovery/v2"
@@ -67,7 +70,7 @@ createApp({
     }
   },
 
-  ///////////////////Responsive threshold////////////////////////
+  ///////////////////Responsive threshold & delay request API////////////////////////
   created() {
     // Vérifie la résolution de l'écran et définit la propriété isMobile
     const mediaQuery = window.matchMedia('(max-width: 1300px)')
@@ -143,7 +146,7 @@ createApp({
     listAppLaunch(){
       this.genres = [];
     },
-    ////////////////Get segments & genres for footer nav////////////////////
+    ////////////////Get segments & genres for footer nav Desktop////////////////////
     getGenresFooterMobile(idSegments) {
       // Si le lien cliqué est le même que la navLink active, on ferme tous les sous-menus
       if (this.activeLinkId === idSegments) {
@@ -172,7 +175,7 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
-    ////////////////Get segments & genres for footer nav////////////////////
+    ////////////////Get segments & genres for footer nav Mobile////////////////////
     getGenresFooterDesktop(idSegments) {
       fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=en`)
       .then(response => response.json())
@@ -199,19 +202,6 @@ createApp({
       .then(response => response.json())
       .then(data => {
         // console.log(data)
-        // for(i=0; i < 3; i++){
-        //   let event = data._embedded.events[i];
-        //   if(event && event.name && event.id && event.name != "Undefined"){
-        //     section.push({
-        //       name: event.name,
-        //       id: event.id,
-        //       heroImg: event.images[5],
-        //       type: event.classifications[0].genre.name,
-        //       date: event.dates.start.localDate,
-        //     });
-        //   }
-        // }
-        // console.log(data)
         const filteredEvents = [];
 
         // Filtrer les événements avec des noms différents
@@ -221,7 +211,6 @@ createApp({
             filteredEvents.push(event);
             eventNames.add(event.name);
           }
-
           // Sortir de la boucle lorsque 4 événements ont été récupérés
           if (filteredEvents.length === 3) {
             break;
@@ -285,45 +274,5 @@ createApp({
     },
   },
   mounted(){
-    
-    
-    // const interval1 = setInterval(() => {
-    //   this.getHomepageDatas(this.hpDatasMusic, idSegmentMusic, 'be', 'fr');
-    // }, 200);
-
-    // const interval2 = setInterval(() => {
-    //   this.getHomepageDatas(this.hpDatasArt, idSegmentArt, 'be', 'fr');
-    // }, 400);
-
-    // const interval3 = setInterval(() => {
-    //   this.getHomepageDatas(this.hpDatasSport, idSegmentSport, 'be', 'fr');
-    // }, 600);
-
-    // const interval4 = setInterval(() => {
-    //   this.getHomepageDatas2('be', 'en');
-    // }, 800);
-
-    // // Arrêter les intervalles après un certain temps
-    // setTimeout(() => {
-    //   clearInterval(interval1);
-    //   clearInterval(interval2);
-    //   clearInterval(interval3);
-    //   clearInterval(interval4);
-    // }, 1000);
-    // setTimeout(() => {
-    //   this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic, 'be', 'fr');
-    // // }, 1000);
-  
-    // // setTimeout(() => {
-    //   this.getHomepageDatas("this.hpDatasArt", idSegmentArt, 'be', 'fr');
-    // // }, 1500);
-  
-    // // setTimeout(() => {
-    //   this.getHomepageDatas("this.hpDatasSport", idSegmentSport, 'be', 'fr');
-    // // }, 500);
-  
-    // setTimeout(() => {
-    //   this.getHomepageDatas2('be', 'en');
-    // }, 500);
   },
 }).mount("#byfApp")
