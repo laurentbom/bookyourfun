@@ -70,6 +70,7 @@ createApp({
       searchQuery: "",
       searchResults: [],
       searchAllResults: [],
+      testi: null,
     }
   },
 
@@ -101,7 +102,7 @@ createApp({
   
     // setTimeout(() => {
       this.getHomepageDatas2('be', 'fr');
-    // }, 500);
+    // }, 400);
   },
   methods : {
     ////////////////Get segments & genres for main nav////////////////////
@@ -212,10 +213,13 @@ createApp({
         // Filtrer les événements avec des noms différents
         const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
         for (const event of data._embedded.events) {
-          if (!eventNames.has(event.name)) {
+          const filteredImages = event.images.filter(image => image.width >= 1024);
+          if (!eventNames.has(event.name) && filteredImages.length > 0) {
+            event.filteredImage = filteredImages[0];
             filteredEvents.push(event);
             eventNames.add(event.name);
           }
+          
           // Sortir de la boucle lorsque 4 événements ont été récupérés
           if (filteredEvents.length === 3) {
             break;
@@ -224,15 +228,12 @@ createApp({
 
         if(section == "this.hpDatasMusic"){
           this.hpDatasMusic = filteredEvents;
-          // console.log(this.hpDatasMusic);
         } 
         if(section == "this.hpDatasArt"){
           this.hpDatasArt = filteredEvents;
-          // console.log(this.hpDatasArt);
         } 
         if(section == "this.hpDatasSport"){
           this.hpDatasSport = filteredEvents;
-          // console.log(this.hpDatasSport);
         }
       })
       .catch(error => {
@@ -249,7 +250,9 @@ createApp({
         // Filtrer les événements avec des noms différents
         const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
         for (const event of data._embedded.events) {
-          if (!eventNames.has(event.name)) {
+          const filteredImages = event.images.filter(image => image.width >= 1024);
+          if (!eventNames.has(event.name) && filteredImages.length > 0) {
+            event.filteredImage = filteredImages[0];
             filteredEvents.push(event);
             eventNames.add(event.name);
           }
@@ -260,18 +263,29 @@ createApp({
           }
         }
         this.hpDatasUpcoming = filteredEvents; // Stocker les événements filtrés dans le tableau Vue
-        // console.log(this.hpDatasUpcoming[0].images[5].url);
-        this.urlImgHeader = this.hpDatasUpcoming[0].images[5].url;
+        this.urlImgHeader = this.hpDatasUpcoming[0].filteredImage.url;
         this.titleHeader = this.hpDatasUpcoming[0].name;
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
-      fetch(`${apiUrl}/suggest?apikey=${apiKey}&resource=events&countryCode=${pays}&locale=${langue}`)
+      fetch(`${apiUrl}/suggest?apikey=${apiKey}&countryCode=${pays}&locale=${langue}`)
       .then(response => response.json())
       .then(data => {
-        this.hpDatasSuggest = data._embedded.events;
-        // console.log(this.hpDatasSuggest)
+        console.log(data)
+        const filteredEvents = [];
+        const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
+        for (const event of data._embedded.attractions) {
+          const filteredImages = event.images.filter(image => image.width >= 1024);
+          if (!eventNames.has(event.name) && filteredImages.length > 0) {
+            event.filteredImage = filteredImages[0];
+            filteredEvents.push(event);
+            eventNames.add(event.name);
+          }
+        }
+        this.hpDatasSuggest = filteredEvents;
+
+        console.log(this.hpDatasSuggest)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 

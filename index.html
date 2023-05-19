@@ -178,7 +178,7 @@
                         <a href="#">
                             <!-- Image -->
                             <div class="upcomingSuggests__img">
-                                <img :src="event.images[5].url" :alt="event.name">
+                                <img :src="event.filteredImage.url" :alt="event.name">
                             </div>
                             <!-- Infos -->
                             <span>{{event.classifications[0].genre.name}}</span>
@@ -197,7 +197,7 @@
                     <li v-if="hpDatasMusic" v-for="(event, index) in hpDatasMusic" :key="event.id">
                         <a href="">
                             <div class="suggest__img flex-c">
-                                <img :src="event.images[8].url" :alt="event.name">
+                                <img :src="event.filteredImage.url" :alt="event.name">
                             </div>
                             <span>{{event.classifications[0].genre.name}}</span>
                             <p>{{event.name}}</p>
@@ -216,7 +216,7 @@
                     <li v-if="hpDatasArt" v-for="(event, index) in hpDatasArt" :key="event.id">
                         <a href="">
                             <div class="suggest__img flex-c">
-                                <img :src="event.images[7].url" :alt="event.name">
+                                <img :src="event.filteredImage.url" :alt="event.name">
                             </div>
                             <span>{{event.classifications[0].genre.name}}</span>
                             <p>{{event.name}}</p>
@@ -235,7 +235,7 @@
                     <li v-if="hpDatasSport" v-for="(event, index) in hpDatasSport" :key="event.id">
                         <a href="">
                             <div class="suggest__img flex-c">
-                                <img :src="event.images[7].url" :alt="event.name">
+                                <img :src="event.filteredImage.url" :alt="event.name">
                             </div>
                             <span>{{event.classifications[0].genre.name}}</span>
                             <p>{{event.name}}</p>
