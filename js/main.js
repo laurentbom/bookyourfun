@@ -84,25 +84,7 @@ createApp({
     mediaQuery.addEventListener('change', () => {
       this.isMobile = mediaQuery.matches
     })
-    setTimeout(() => {
-      this.getGenresFooterDesktop(idSegmentMusic);
-    }, 3000);
-
-    setTimeout(() => {
-    this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic, 'be', 'fr');
-    }, 1000);
-  
-    setTimeout(() => {
-      this.getHomepageDatas("this.hpDatasArt", idSegmentArt, 'be', 'fr');
-    }, 1500);
-  
-    setTimeout(() => {
-      this.getHomepageDatas("this.hpDatasSport", idSegmentSport, 'be', 'fr');
-    }, 2000);
-  
-    // setTimeout(() => {
-      this.getHomepageDatas2('be', 'fr');
-    // }, 400);
+    
   },
   methods : {
     ////////////////Get segments & genres for main nav////////////////////
@@ -327,5 +309,24 @@ createApp({
     }
   },
   mounted(){
+    setTimeout(() => {
+      this.getGenresFooterDesktop(idSegmentMusic);
+    }, 3000);
+
+    setTimeout(() => {
+    this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic, 'be', 'fr');
+    }, 1000);
+  
+    setTimeout(() => {
+      this.getHomepageDatas("this.hpDatasArt", idSegmentArt, 'be', 'fr');
+    }, 1500);
+  
+    setTimeout(() => {
+      this.getHomepageDatas("this.hpDatasSport", idSegmentSport, 'be', 'fr');
+    }, 2000);
+  
+    // setTimeout(() => {
+      this.getHomepageDatas2('be', 'fr');
+    // }, 400);
   },
 }).mount("#byfApp")
