@@ -21,33 +21,32 @@ const idSegmentArt = "KZFzniwnSyZfZ7v7na";
 const idSegmentAttractions = "KZFzniwnSyZfZ7v7n1";
 const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
+// Z698xZG2Zau1t
+
+
+function test(){
+  fetch(`${apiUrl}/events/Z698xZG2Zau1t?apikey=${apiKey}&locale=fr`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des données :", error); 
+      });
+}
+test();
+
 ////////////////////App Vue////////////////////////
 const {createApp} = Vue;
-
 createApp({
   data(){
     return{
       navLinks : [
-        {
-          name : "Musique",
-          id : idSegmentMusic,
-        },
-        {
-          name : "Arts et théâtre",
-          id : idSegmentArt,
-        },
-        {
-          name : "Films",
-          id : idSegmentFilms,
-        },
-        {
-          name : "Sports",
-          id : idSegmentSport,
-        },
-        {
-          name : "Divers",
-          id : idSegmentAttractions,
-        }
+        { name: "Musique", id: idSegmentMusic },
+        { name: "Arts et théâtre", id: idSegmentArt },
+        { name: "Films", id: idSegmentFilms },
+        { name: "Sports", id: idSegmentSport },
+        { name: "Divers", id: idSegmentAttractions }
       ],
       genres: [],
       genresFooter: [],
@@ -70,7 +69,6 @@ createApp({
       searchQuery: "",
       searchResults: [],
       searchAllResults: [],
-      testi: null,
     }
   },
 
@@ -130,6 +128,7 @@ createApp({
         document.body.classList.add('no-scroll');
       }
     },
+    /////////////////Querie demand sub nav/////////////////
     listAppLaunch(){
       this.genres = [];
       this.isQuerie = true;
@@ -200,6 +199,11 @@ createApp({
             event.filteredImage = filteredImages[0];
             filteredEvents.push(event);
             eventNames.add(event.name);
+            const dateParts = event.dates.start.localDate.split('-');
+            const day = dateParts[2];
+            const month = dateParts[1];
+            const year = dateParts[0];
+            event.filteredDate = `${day}-${month}-${year}`;
           }
           
           // Sortir de la boucle lorsque 4 événements ont été récupérés
@@ -254,7 +258,7 @@ createApp({
       fetch(`${apiUrl}/suggest?apikey=${apiKey}&countryCode=${pays}&locale=${langue}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        // console.log(data)
         const filteredEvents = [];
         const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
         for (const event of data._embedded.attractions) {
@@ -267,7 +271,7 @@ createApp({
         }
         this.hpDatasSuggest = filteredEvents;
 
-        console.log(this.hpDatasSuggest)
+        // console.log(this.hpDatasSuggest)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
@@ -283,6 +287,7 @@ createApp({
           fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&includeSpellcheck=yes&countryCode=be&locale=fr`)
             .then(response => response.json())
             .then(data => {
+              console.log(data)
               if (data._embedded.events != undefined) {
                 this.searchAllResults = data._embedded.events;
 
