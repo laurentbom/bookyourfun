@@ -25,7 +25,7 @@ const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
 
 function test(){
-  fetch(`${apiUrl}/events/Z698xZG2Zau1t?apikey=${apiKey}&locale=fr`)
+  fetch(`${apiUrl}/attractions/K8vZ9174GcV?apikey=${apiKey}&locale=fr-be`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -34,7 +34,7 @@ function test(){
         console.error("Erreur lors de la récupération des données :", error); 
       });
 }
-test();
+// test()
 
 ////////////////////App Vue////////////////////////
 const {createApp} = Vue;
@@ -69,6 +69,10 @@ createApp({
       searchQuery: "",
       searchResults: [],
       searchAllResults: [],
+      modalOpen : false,
+      modalDatas : null,
+      overlay : false,
+      typeModal: "",
     }
   },
 
@@ -107,7 +111,7 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
-    /////////////////Close navs/////////////////
+    /////////////////Close navs & modal window/////////////////
     closeNav(){
       this.genres = [];
       this.mobileNavClass = "";
@@ -116,22 +120,85 @@ createApp({
       this.searchResults = [];
       this.searchQuery = [];
     },
+    closeModal(){
+      this.modalOpen = false;
+      this.modalDatas = null;
+      this.overlay = false;
+      document.body.classList.remove('no-scroll');
+    },
     /////////////////Mobile menu/////////////////
     openMobileMenu(){
       if(this.mobileNavClass == "openMobile"){
         this.mobileNavClass = "";
         this.burgerNavClass = "";
-        document.body.classList.remove('no-scroll');
+        
+        this.overlay = false;
       } else {
         this.mobileNavClass = "openMobile";
         this.burgerNavClass = "open";
         document.body.classList.add('no-scroll');
+        this.modalDatas = null;
+        this.overlay = true;
       }
     },
     /////////////////Querie demand sub nav/////////////////
     listAppLaunch(){
       this.genres = [];
       this.isQuerie = true;
+    },
+    /////////////////Querie demand modal/////////////////
+    modalLaunch(id,type){
+      this.overlay = true;
+      this.modalDatas = null;
+      document.body.classList.add('no-scroll');
+      this.searchQuery = "";
+      this.searchResults = [];
+
+      if(type == "main"){
+        this.typeModal = "main"
+        fetch(`${apiUrl}/events/${id}?apikey=${apiKey}&locale=fr`)
+        .then(response => response.json())
+        .then(data => {
+          this.modalDatas = data;
+          const dateParts = this.modalDatas.dates.start.localDate.split('-');
+          const day = dateParts[2];
+          const month = dateParts[1];
+          const year = dateParts[0];
+          this.modalDatas.filteredDate = `${day}-${month}-${year}`;
+
+          const filteredImage = this.modalDatas.images.filter(image => image.width >= 1024);
+          this.modalDatas.filteredImage = filteredImage[0];
+          // console.log(this.modalDatas);
+
+          var heureAPI = this.modalDatas.dates.start.localTime; // Heure reçue depuis votre API
+
+          // Séparation des heures, minutes et secondes
+          var partiesHeure = heureAPI.split(":");
+          var heures = partiesHeure[0];
+          var minutes = partiesHeure[1];
+
+          // Formatage de l'heure
+          var heureFormattee = heures + "h" + minutes;
+          this.modalDatas.filteredTime = heureFormattee;
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des données :", error); 
+      });
+      } else{
+        this.typeModal = "suggest"
+        fetch(`${apiUrl}/attractions/${id}?apikey=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          this.modalDatas = data;
+          const filteredImage = this.modalDatas.images.filter(image => image.width >= 1024);
+          this.modalDatas.filteredImage = filteredImage[0];
+          console.log(this.modalDatas);
+        })
+        .catch(error => {
+          console.error("Erreur lors de la récupération des données :", error); 
+        });
+      }
+      
     },
     ////////////////Get segments & genres for footer nav Desktop////////////////////
     getGenresFooterMobile(idSegments) {
@@ -185,7 +252,7 @@ createApp({
     },
     ////////////////Get Homepage Datas////////////////////
     getHomepageDatas(section,segment,pays,langue){
-      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${pays}&sort=random&locale=${langue}`)
+      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${pays}&sort=random&locale=${langue}&size=3`)
       .then(response => response.json())
       .then(data => {
         // console.log(data)
@@ -227,7 +294,7 @@ createApp({
       });
     },
     getHomepageDatas2(pays,langue){
-      fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${pays}&sort=date,asc&locale=${langue}`)
+      fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${pays}&sort=date,asc&locale=${langue}&size=5`)
       .then(response => response.json())
       .then(data => {
         // console.log(data)
@@ -255,13 +322,15 @@ createApp({
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
-      fetch(`${apiUrl}/suggest?apikey=${apiKey}&countryCode=${pays}&locale=${langue}`)
+
+      //  Films
+      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${pays}&sort=random&locale=${langue}&size=5`)
       .then(response => response.json())
       .then(data => {
-        // console.log(data)
+        console.log(data)
         const filteredEvents = [];
         const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
-        for (const event of data._embedded.attractions) {
+        for (const event of data._embedded.events) {
           const filteredImages = event.images.filter(image => image.width >= 1024);
           if (!eventNames.has(event.name) && filteredImages.length > 0) {
             event.filteredImage = filteredImages[0];
@@ -270,8 +339,7 @@ createApp({
           }
         }
         this.hpDatasSuggest = filteredEvents;
-
-        // console.log(this.hpDatasSuggest)
+        console.log(this.hpDatasSuggest)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
@@ -287,7 +355,7 @@ createApp({
           fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&includeSpellcheck=yes&countryCode=be&locale=fr`)
             .then(response => response.json())
             .then(data => {
-              console.log(data)
+              // console.log(data)
               if (data._embedded.events != undefined) {
                 this.searchAllResults = data._embedded.events;
 
@@ -311,9 +379,16 @@ createApp({
       } else {
         this.searchResults = []; // Réinitialiser les résultats si la requête est trop courte
       }
+    },
+    /////////////Disable overlay when mobile menu open and resize////////////////
+    handleResize(){
+      if(this.isMobile && !this.modalDatas){
+        this.overlay= false;
+      }
     }
   },
   mounted(){
+    // Timeout because of limit of 5 calls/sec of API
     setTimeout(() => {
       this.getGenresFooterDesktop(idSegmentMusic);
     }, 3000);
@@ -333,5 +408,9 @@ createApp({
     // setTimeout(() => {
       this.getHomepageDatas2('be', 'fr');
     // }, 400);
+
+    // Disable overlay when mobile menu open and resize
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   },
 }).mount("#byfApp")
