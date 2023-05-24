@@ -49,7 +49,7 @@
                 <ul>
                     <li v-if="searchQuery.length >= 1 && searchResults.length == 0" class="searchInputInfo">Taper au moins un mot</li>
                     <li v-if="searchResults.length > 0" class="searchInputInfo">Suggestions</li>
-                    <li  v-if="searchResults.length > 0" v-for="searchResult in searchResults" :key="searchResult.id" @click="modalLaunch(searchResult.id)"><a href="#">{{searchResult.name}}</a></li>
+                    <li  v-if="searchResults.length > 0" v-for="searchResult in searchResults" :key="searchResult.id" @click="modalLaunch(searchResult.id,'main')"><a href="#">{{searchResult.name}}</a></li>
                 </ul>
                 <button @click="modalLaunch(searchResult.id)"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
