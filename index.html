@@ -45,13 +45,13 @@
         <div class="navigation__search flex  align-c">
             <p>Recherche</p>
             <div class="navigation__search__bar flex">
-                <input v-model="searchQuery" @input="performSearch" type="text" placeholder="Recherche par artiste, événement">
+                <input v-model="searchQuery" @input="performSearch" @keyup.enter="searchWord" type="text" placeholder="Recherche par artiste, événement">
                 <ul>
                     <li v-if="searchQuery.length >= 1 && searchResults.length == 0" class="searchInputInfo">Taper au moins un mot</li>
                     <li v-if="searchResults.length > 0" class="searchInputInfo">Suggestions</li>
-                    <li  v-if="searchResults.length > 0" v-for="searchResult in searchResults" :key="searchResult.id" @click="modalLaunch(searchResult.id,'main')"><a href="#">{{searchResult.name}}</a></li>
+                    <li  v-if="searchResults.length > 0" v-for="searchResult in searchResults" :key="searchResult.id" @click="modalLaunch(searchResult.id)"><a href="#">{{searchResult.name}}</a></li>
                 </ul>
-                <button @click="modalLaunch(searchResult.id)"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button @click="searchWord"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </div>
     </nav>
@@ -67,7 +67,7 @@
         <!-- Main container -->
         <div class="main__container">
             <!-- Queries section -->
-            <section v-show="isQuerie" class="queries" id="querySection">
+            <section v-show="isQuerie" class="queries" id="querySection" ref="item">
                 <div class="queries__title flex">
                     <div class="flex-c">
                         <h3>Recherche</h3>
@@ -77,94 +77,25 @@
                 </div>
                 <div class="queriesComponent">
                     <ul class="queries__container">
-                        <li>
-                            <div class="querieDate">MAI<br>16</div>
+                        <li v-for="(result, index) in hpDatasQuerie" :key="result.id">
+                            <div class="querieDate">{{result.filteredDate}}<br>{{result.filteredTime}}</div>
                             <div class="querieInfos">
-                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
-                                <div class="querieName">Double Dance: Ash - 55</div>
-                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
+                                <div class="querieHour"></div>
+                                <div class="querieName">{{result.name}}</div>
+                                <div class="querieVenue">{{result._embedded.venues[0].address.line1}}, {{result._embedded.venues[0].city.name}}, {{result._embedded.venues[0].country.name}}</div>
                             </div>
-                            <a href="#" class="querieMoreInfo btn">
-                                Infos
-                            </a>
+                            <span class="querieMoreInfo btn" @click="modalLaunch(result.id)">Infos</span>
+                            <span class="querieMoreInfoMobile">
+
+                            </span>
                             <a href="#" class="querieMoreInfoMobile">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="querieDate">MAI<br>16</div>
-                            <div class="querieInfos">
-                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
-                                <div class="querieName">Double Dance: Ash - 55</div>
-                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
-                            </div>
-                            <a href="#" class="querieMoreInfo btn">
-                                Infos
-                            </a>
-                            <a href="#" class="querieMoreInfoMobile">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="querieDate">MAI<br>16</div>
-                            <div class="querieInfos">
-                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
-                                <div class="querieName">Double Dance: Ash - 55</div>
-                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
-                            </div>
-                            <a href="#" class="querieMoreInfo btn">
-                                Infos
-                            </a>
-                            <a href="#" class="querieMoreInfoMobile">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="querieDate">MAI<br>16</div>
-                            <div class="querieInfos">
-                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
-                                <div class="querieName">Double Dance: Ash - 55</div>
-                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
-                            </div>
-                            <a href="#" class="querieMoreInfo btn">
-                                Infos
-                            </a>
-                            <a href="#" class="querieMoreInfoMobile">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="querieDate">MAI<br>16</div>
-                            <div class="querieInfos">
-                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
-                                <div class="querieName">Double Dance: Ash - 55</div>
-                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
-                            </div>
-                            <a href="#" class="querieMoreInfo btn">
-                                Infos
-                            </a>
-                            <a href="#" class="querieMoreInfoMobile">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="querieDate">MAI<br>16</div>
-                            <div class="querieInfos">
-                                <div class="querieHour"><span>mer</span><span>20:30</span></div>
-                                <div class="querieName">Double Dance: Ash - 55</div>
-                                <div class="querieVenue"><span>Antwerpen</span><span>Handerlsbeurs</span></div>
-                            </div>
-                            <a href="#" class="querieMoreInfo btn">
-                                Infos
-                            </a>
-                            <a href="#" class="querieMoreInfoMobile">
-                                <i class="fa-solid fa-arrow-right"></i>
+                                <i class="fa-solid fa-arrow-right" @click="modalLaunch(result.id)"></i>
                             </a>
                         </li>
                     </ul>
                     <div class="queriesComponent__pagination">
-                        <i class="fa-solid fa-arrow-left"></i>
-                        <i class="fa-solid fa-arrow-right"></i>
+                        <i v-show="showPaginationPrev" class="fa-solid fa-arrow-left" @click="queriePagination('prev')"></i>
+                        <i v-show="showPaginationNext" class="fa-solid fa-arrow-right" @click="queriePagination('next')"></i>
                     </div>
                 </div>
             </section>
@@ -256,7 +187,7 @@
             </div>
         </aside>
         <!-- Modal Window -->
-        <div v-if="modalDatas" class="modale">
+        <div v-if="modalDatas" :class="'modale ' + modalAnimClass">
             <div class="modale__title flex">
                 <div class="flex-c">
                     <h3>{{modalDatas.name}}</h3>
@@ -285,6 +216,8 @@
                 </div>
             </div>
         </div>
+        <!-- To the top button -->
+        <button v-if="showButton" class="topButton" @click="toTheTop"><i class="fa-solid fa-arrow-up"></i></button>
     </main>
     <!-- Footer -->
     <footer class="footer" @click="closeNav">

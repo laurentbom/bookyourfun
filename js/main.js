@@ -23,12 +23,9 @@ const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
 // Z698xZG2Zau1t
 
-window.onload = function() {
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-}
+
 function test(){
-  fetch(`${apiUrl}/attractions/K8vZ9174GcV?apikey=${apiKey}&locale=fr-be`)
+  fetch(`https://app.ticketmaster.com/discovery/v2/events?locale=fr-be&page=1&size=20&apikey=${apiKey}`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -62,6 +59,11 @@ createApp({
       showDropdown: false,
       activeLinkId: "",
       isQuerie: false,
+      querieNextPage: "",
+      queriePrevPage: "",
+      showPaginationNext: false,
+      showPaginationPrev: false,
+      hpDatasQuerie: [],
       hpDatasUpcoming: [],
       hpDatasMusic: [],
       hpDatasArt: [],
@@ -75,8 +77,8 @@ createApp({
       modalOpen : false,
       modalDatas : null,
       overlay : false,
-      typeModal: "",
       language: "fr",
+      showButton: false,
     }
   },
 
@@ -125,6 +127,7 @@ createApp({
       this.searchQuery = [];
     },
     closeModal(){
+      this.modalAnimClass = "";
       this.modalOpen = false;
       this.modalDatas = null;
       this.overlay = false;
@@ -135,8 +138,8 @@ createApp({
       if(this.mobileNavClass == "openMobile"){
         this.mobileNavClass = "";
         this.burgerNavClass = "";
-        
         this.overlay = false;
+        document.body.classList.remove('no-scroll');
       } else {
         this.mobileNavClass = "openMobile";
         this.burgerNavClass = "open";
@@ -149,6 +152,10 @@ createApp({
     listAppLaunch(){
       this.genres = [];
       this.isQuerie = true;
+      const querieSection = this.$refs.item;
+      querieSection.scrollIntoView({behavior: 'smooth'});
+
+      
     },
     /////////////////Querie demand modal/////////////////
     modalLaunch(id,type){
@@ -162,25 +169,29 @@ createApp({
         .then(response => response.json())
         .then(data => {
           this.modalDatas = data;
+
+          // Date
           const dateParts = this.modalDatas.dates.start.localDate.split('-');
           const day = dateParts[2];
           const month = dateParts[1];
           const year = dateParts[0];
           this.modalDatas.filteredDate = `${day}-${month}-${year}`;
-    
+
+          // Image
           const filteredImage = this.modalDatas.images.filter(image => image.width >= 1024);
           this.modalDatas.filteredImage = filteredImage[0];
-          
-          if(this.modalDatas.dates.start.localTime != undefined){
-            var heureAPI = this.modalDatas.dates.start.localTime; // Heure reçue depuis votre API
-          var partiesHeure = heureAPI.split(":");
-          var heures = partiesHeure[0];
-          var minutes = partiesHeure[1];
-          var heureFormattee = heures + "h" + minutes;
-          this.modalDatas.filteredTime = heureFormattee;
-          }
-          
 
+          // Hour
+          if(this.modalDatas.dates.start.localTime != undefined){
+            var heureAPI = this.modalDatas.dates.start.localTime; 
+            var partiesHeure = heureAPI.split(":");
+            var heures = partiesHeure[0];
+            var minutes = partiesHeure[1];
+            var heureFormattee = heures + "h" + minutes;
+            this.modalDatas.filteredTime = heureFormattee;
+          }
+
+          // Status
           if (this.language === 'fr') {
             // Traduire les statuts en français
             const statusTranslations = {
@@ -193,6 +204,7 @@ createApp({
     
             this.modalDatas.dates.status.code = statusTranslations[this.modalDatas.dates.status.code] || this.modalDatas.dates.status.code;
           }
+
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
@@ -244,9 +256,115 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
+    ////////////////Get segments & genres for footer nav Mobile////////////////////
+    subnavQuerie(){
+
+    },
     ////////////////Close Queries////////////////////
     closeQueries(){
       this.isQuerie = false;
+    },
+    queriePagination(prevOrNext){
+      
+      const filteredEvents = [];
+      if(prevOrNext === "next"){
+        fetch(`https://app.ticketmaster.com${this.querieNextPage}&apikey=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if(data._links.next && data._links.next.href !== undefined){
+            this.querieNextPage = data._links.next.href;
+            this.showPaginationNext = true
+          } else {
+            this.showPaginationNext = false
+            this.querieNextPage = "";
+          }
+          if(data._links.prev && data._links.prev.href !== undefined){
+            this.queriePrevPage = data._links.prev.href;
+            this.showPaginationPrev = true
+            } else{
+              this.showPaginationPrev = false
+              this.queriePrevPage = "";
+            }
+  
+          for (const event of data._embedded.events) {
+            const filteredImages = event.images.filter(image => image.width >= 1024);
+            event.filteredImage = filteredImages[0];
+            const dateParts = event.dates.start.localDate.split('-');
+            const day = dateParts[2];
+            const month = dateParts[1];
+            const year = dateParts[0];
+            event.filteredDate = `${day}-${month}-${year}`;
+
+            // Hour
+            if(event.dates.start.localTime){
+              var heureAPI = event.dates.start.localTime; 
+              var partiesHeure = heureAPI.split(":");
+              var heures = partiesHeure[0];
+              var minutes = partiesHeure[1];
+              var heureFormattee = heures + "h" + minutes;
+              event.filteredTime = heureFormattee;
+            }
+            filteredEvents.push(event);
+          }
+          
+          this.hpDatasQuerie = filteredEvents;
+          // console.log(this.hpDatasQuerie)
+          console.log("next")
+          })
+          .catch(error => {
+            console.error("Erreur lors de la récupération des données :", error); 
+          });
+      } else {
+        fetch(`https://app.ticketmaster.com${this.queriePrevPage}&apikey=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if(data._links.next && data._links.next.href !== undefined){
+            this.querieNextPage = data._links.next.href;
+            this.showPaginationNext = true
+          } else {
+            this.showPaginationNext = false
+            this.querieNextPage = "";
+          }
+          if(data._links.prev && data._links.prev.href !== undefined){
+            this.queriePrevPage = data._links.prev.href;
+            this.showPaginationPrev = true
+            } else{
+              this.showPaginationPrev = false
+              this.queriePrevPage = "";
+            }
+  
+          for (const event of data._embedded.events) {
+            const filteredImages = event.images.filter(image => image.width >= 1024);
+            event.filteredImage = filteredImages[0];
+            const dateParts = event.dates.start.localDate.split('-');
+            const day = dateParts[2];
+            const month = dateParts[1];
+            const year = dateParts[0];
+            event.filteredDate = `${day}-${month}-${year}`;
+
+            // Hour
+            if(event.dates.start.localTime){
+              var heureAPI = event.dates.start.localTime; 
+              var partiesHeure = heureAPI.split(":");
+              var heures = partiesHeure[0];
+              var minutes = partiesHeure[1];
+              var heureFormattee = heures + "h" + minutes;
+              event.filteredTime = heureFormattee;
+            }
+            filteredEvents.push(event);
+          }
+          
+          this.hpDatasQuerie = filteredEvents;
+          // console.log(this.hpDatasQuerie)
+          console.log("prev")
+          })
+          .catch(error => {
+            console.error("Erreur lors de la récupération des données :", error); 
+          });
+      }
+      
     },
     ////////////////Get Homepage Datas////////////////////
     getHomepageDatas(section,segment,pays,langue){
@@ -322,10 +440,10 @@ createApp({
       });
 
       //  Films
-      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${pays}&sort=random&locale=${langue}&size=5`)
+      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${pays}&sort=random&size=5&locale=${langue}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        // console.log(data)
         const filteredEvents = [];
         const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
         for (const event of data._embedded.events) {
@@ -337,7 +455,7 @@ createApp({
           }
         }
         this.hpDatasSuggest = filteredEvents;
-        console.log(this.hpDatasSuggest)
+        // console.log(this.hpDatasSuggest)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
@@ -353,7 +471,7 @@ createApp({
           fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&includeSpellcheck=yes&countryCode=be&locale=fr`)
             .then(response => response.json())
             .then(data => {
-              // console.log(data)
+              console.log(data)
               if (data._embedded.events != undefined) {
                 this.searchAllResults = data._embedded.events;
 
@@ -378,16 +496,86 @@ createApp({
         this.searchResults = []; // Réinitialiser les résultats si la requête est trop courte
       }
     },
+    ////////////////Search ////////////////////
+    searchWord(){
+      const querieSection = this.$refs.item;
+      querieSection.scrollIntoView({behavior: 'smooth'});
+      this.isQuerie = true;
+      this.searchResults = [];
+
+      const filteredEvents = [];
+      fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&size=5&locale=fr-be`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        if(data._links.next && data._links.next.href !== undefined){
+          this.querieNextPage = data._links.next.href;
+          this.showPaginationNext = true
+        } else {
+          this.showPaginationNext = false
+        }
+        if(data._links.prev && data._links.prev.href !== undefined){
+          this.queriePrevPage = data._links.prev.href;
+          this.showPaginationPrev = true
+          } else{
+            this.showPaginationPrev = false
+          }
+
+        for (const event of data._embedded.events) {
+          const filteredImages = event.images.filter(image => image.width >= 1024);
+          event.filteredImage = filteredImages[0];
+          const dateParts = event.dates.start.localDate.split('-');
+          const day = dateParts[2];
+          const month = dateParts[1];
+          const year = dateParts[0];
+          event.filteredDate = `${day}-${month}-${year}`;
+
+          // Hour
+          if(event.dates.start.localTime){
+            var heureAPI = event.dates.start.localTime; 
+            var partiesHeure = heureAPI.split(":");
+            var heures = partiesHeure[0];
+            var minutes = partiesHeure[1];
+            var heureFormattee = heures + "h" + minutes;
+            event.filteredTime = heureFormattee;
+          }
+          filteredEvents.push(event);
+        }
+        
+        this.hpDatasQuerie = filteredEvents;
+        console.log(this.hpDatasQuerie)
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des données :", error); 
+      });
+      this.searchResults = [];
+      this.searchQuery = "";
+      this.hpDatasQuerie = [];
+    },
     /////////////Disable overlay when mobile menu open and resize////////////////
     handleResize(){
       if(this.isMobile && !this.modalDatas){
         this.overlay= false;
         document.body.classList.remove('no-scroll');
       }
+    },
+    /////////////To the top button////////////////
+    handleScroll() {
+      const scrollPosition = window.scrollY || window.pageYOffset;
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const scrollThreshold = windowHeight * 0.3; // 30% of window height
+
+      this.showButton = scrollPosition > scrollThreshold;
+    },
+    toTheTop(){
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
   },
   mounted(){
-    window.scrollTo(0, 0);
+    window.addEventListener("scroll", this.handleScroll);
     // Timeout because of limit of 5 calls/sec of API
     setTimeout(() => {
       this.getGenresFooterDesktop(idSegmentMusic);
@@ -413,4 +601,14 @@ createApp({
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
   },
+  watch: {
+    isQuerie(value) {
+      if (value) {
+        this.$nextTick(() => {
+          const querieSection = this.$refs.item;
+          querieSection.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+    }
+  }
 }).mount("#byfApp")
