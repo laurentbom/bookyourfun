@@ -23,7 +23,10 @@ const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
 // Z698xZG2Zau1t
 
-
+window.onload = function() {
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+}
 function test(){
   fetch(`${apiUrl}/attractions/K8vZ9174GcV?apikey=${apiKey}&locale=fr-be`)
       .then(response => response.json())
@@ -73,6 +76,7 @@ createApp({
       modalDatas : null,
       overlay : false,
       typeModal: "",
+      language: "fr",
     }
   },
 
@@ -154,8 +158,6 @@ createApp({
       this.searchQuery = "";
       this.searchResults = [];
 
-      if(type == "main"){
-        this.typeModal = "main"
         fetch(`${apiUrl}/events/${id}?apikey=${apiKey}&locale=fr`)
         .then(response => response.json())
         .then(data => {
@@ -165,40 +167,36 @@ createApp({
           const month = dateParts[1];
           const year = dateParts[0];
           this.modalDatas.filteredDate = `${day}-${month}-${year}`;
-
+    
           const filteredImage = this.modalDatas.images.filter(image => image.width >= 1024);
           this.modalDatas.filteredImage = filteredImage[0];
-          // console.log(this.modalDatas);
-
-          var heureAPI = this.modalDatas.dates.start.localTime; // Heure reçue depuis votre API
-
-          // Séparation des heures, minutes et secondes
+          
+          if(this.modalDatas.dates.start.localTime != undefined){
+            var heureAPI = this.modalDatas.dates.start.localTime; // Heure reçue depuis votre API
           var partiesHeure = heureAPI.split(":");
           var heures = partiesHeure[0];
           var minutes = partiesHeure[1];
-
-          // Formatage de l'heure
           var heureFormattee = heures + "h" + minutes;
           this.modalDatas.filteredTime = heureFormattee;
+          }
+          
+
+          if (this.language === 'fr') {
+            // Traduire les statuts en français
+            const statusTranslations = {
+              "onsale": "En vente",
+              "offsale": "Hors vente",
+              "canceled": "Annulé",
+              "postponed": "Reporté",
+              "rescheduled": "Reprogrammé"
+            };
+    
+            this.modalDatas.dates.status.code = statusTranslations[this.modalDatas.dates.status.code] || this.modalDatas.dates.status.code;
+          }
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
-      } else{
-        this.typeModal = "suggest"
-        fetch(`${apiUrl}/attractions/${id}?apikey=${apiKey}`)
-        .then(response => response.json())
-        .then(data => {
-          this.modalDatas = data;
-          const filteredImage = this.modalDatas.images.filter(image => image.width >= 1024);
-          this.modalDatas.filteredImage = filteredImage[0];
-          console.log(this.modalDatas);
-        })
-        .catch(error => {
-          console.error("Erreur lors de la récupération des données :", error); 
-        });
-      }
-      
     },
     ////////////////Get segments & genres for footer nav Desktop////////////////////
     getGenresFooterMobile(idSegments) {
@@ -252,7 +250,7 @@ createApp({
     },
     ////////////////Get Homepage Datas////////////////////
     getHomepageDatas(section,segment,pays,langue){
-      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${pays}&sort=random&locale=${langue}&size=3`)
+      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${pays}&sort=random&locale=${langue}`)
       .then(response => response.json())
       .then(data => {
         // console.log(data)
@@ -294,7 +292,7 @@ createApp({
       });
     },
     getHomepageDatas2(pays,langue){
-      fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${pays}&sort=date,asc&locale=${langue}&size=5`)
+      fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${pays}&sort=date,asc&locale=${langue}`)
       .then(response => response.json())
       .then(data => {
         // console.log(data)
@@ -384,10 +382,12 @@ createApp({
     handleResize(){
       if(this.isMobile && !this.modalDatas){
         this.overlay= false;
+        document.body.classList.remove('no-scroll');
       }
     }
   },
   mounted(){
+    window.scrollTo(0, 0);
     // Timeout because of limit of 5 calls/sec of API
     setTimeout(() => {
       this.getGenresFooterDesktop(idSegmentMusic);

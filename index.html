@@ -11,7 +11,7 @@
 </head>
 
 <body id="byfApp">
-    <div v-if="overlay" class="overlay"></div>
+    <div v-if="overlay" class="overlay" @click="closeModal(), closeNav()"></div>
     <!-- Nav & searchbar -->
     <nav class="navigation flex">
         <!-- Logo + burger -->
@@ -175,7 +175,7 @@
                 <!-- List -->
                 <ul>
                     <!-- List Item -->
-                    <li class="upcomingSuggests__item" v-if="hpDatasUpcoming" v-for="(event, index) in hpDatasUpcoming" :key="event.id" :data-id="event.id" @click="modalLaunch(event.id,'main')">
+                    <li class="upcomingSuggests__item" v-if="hpDatasUpcoming" v-for="(event, index) in hpDatasUpcoming" :key="event.id" :data-id="event.id" @click="modalLaunch(event.id)">
                             <!-- Image -->
                             <div class="upcomingSuggests__img">
                                 <img :src="event.filteredImage.url" :alt="event.name">
@@ -193,7 +193,7 @@
                 <div class="greyLine"></div>
                 <h3>Musique</h3>
                 <ul>
-                    <li v-if="hpDatasMusic" v-for="(event, index) in hpDatasMusic" :key="event.id" @click="modalLaunch(event.id, 'main')">
+                    <li v-if="hpDatasMusic" v-for="(event, index) in hpDatasMusic" :key="event.id" @click="modalLaunch(event.id)">
                             <div class="suggest__img flex-c">
                                 <img :src="event.filteredImage.url" :alt="event.name">
                             </div>
@@ -210,7 +210,7 @@
                 <div class="greyLine"></div>
                 <h3>Arts & théâtre</h3>
                 <ul>
-                    <li v-if="hpDatasArt" v-for="(event, index) in hpDatasArt" :key="event.id" @click="modalLaunch(event.id,'main')">
+                    <li v-if="hpDatasArt" v-for="(event, index) in hpDatasArt" :key="event.id" @click="modalLaunch(event.id)">
                             <div class="suggest__img flex-c">
                                 <img :src="event.filteredImage.url" :alt="event.name">
                             </div>
@@ -227,7 +227,7 @@
                 <div class="greyLine"></div>
                 <h3>Sports</h3>
                 <ul>
-                    <li v-if="hpDatasSport" v-for="(event, index) in hpDatasSport" :key="event.id" @click="modalLaunch(event.id, 'main')">
+                    <li v-if="hpDatasSport" v-for="(event, index) in hpDatasSport" :key="event.id" @click="modalLaunch(event.id)">
                             <div class="suggest__img flex-c">
                                 <img :src="event.filteredImage.url" :alt="event.name">
                             </div>
@@ -243,7 +243,7 @@
         <aside class="main__aside">
             <h3>Plus</h3>
             <ul class="suggests">
-                <li v-if="hpDatasSuggest" v-for="(event, index) in hpDatasSuggest" :key="event.id" @click="modalLaunch(event.id,'main')">
+                <li v-if="hpDatasSuggest" v-for="(event, index) in hpDatasSuggest" :key="event.id" @click="modalLaunch(event.id)">
                         <div class="aside__img">
                             <img :src="event.filteredImage.url" :alt="event.name">
                         </div>
@@ -269,14 +269,17 @@
                         <a :href="modalDatas.filteredImage.url"><img :src="modalDatas.filteredImage.url" :alt="modalDatas.name"></a>
                     </div>
                     <div class="modaleText flex-c">
-                        <div v-if="typeModal == 'main'" class="mainModal">
+                            <!-- Title -->
+                            <p>{{modalDatas.name}}</p>
+                            <!-- Genre -->
                             <p v-if="modalDatas._embedded.attractions"><strong>Genre:</strong> {{modalDatas._embedded.attractions[0].classifications[0].segment.name}}, {{modalDatas._embedded.attractions[0].classifications[0].genre.name}}</p>
                             <p v-else><strong>Genre:</strong> {{modalDatas.classifications[0].segment.name}}, {{modalDatas.classifications[0].genre.name}}</p>
+                            <!-- Date -->
                             <p><strong>Date:</strong> {{modalDatas.filteredDate}}<span v-if="modalDatas.filteredTime">, {{modalDatas.filteredTime}}</span></p>
+                            <!-- Adress -->
                             <p><strong>Adresse:</strong> {{modalDatas._embedded.venues[0].address.line1}}, {{modalDatas._embedded.venues[0].city.name}}, {{modalDatas._embedded.venues[0].country.name}}</p>
+                            <!-- Status -->
                             <p><strong>Statut:</strong> {{modalDatas.dates.status.code}}</p>
-                        </div>
-                        <div v-else class="suggestModal"></div>
                         <a :href="modalDatas.url" class="btn">Tickets</a>
                     </div>
                 </div>
