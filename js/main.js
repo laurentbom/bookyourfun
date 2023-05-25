@@ -63,6 +63,7 @@ createApp({
       queriePrevPage: "",
       showPaginationNext: false,
       showPaginationPrev: false,
+      resultsNumber: "",
       hpDatasQuerie: [],
       hpDatasUpcoming: [],
       hpDatasMusic: [],
@@ -71,6 +72,7 @@ createApp({
       hpDatasSuggest: [],
       urlImgHeader: "",
       titleHeader: "",
+      urlHeader: "",
       searchQuery: "",
       searchResults: [],
       searchAllResults: [],
@@ -310,7 +312,6 @@ createApp({
           
           this.hpDatasQuerie = filteredEvents;
           // console.log(this.hpDatasQuerie)
-          console.log("next")
           })
           .catch(error => {
             console.error("Erreur lors de la récupération des données :", error); 
@@ -357,8 +358,7 @@ createApp({
           }
           
           this.hpDatasQuerie = filteredEvents;
-          // console.log(this.hpDatasQuerie)
-          console.log("prev")
+          console.log(this.hpDatasQuerie)
           })
           .catch(error => {
             console.error("Erreur lors de la récupération des données :", error); 
@@ -431,9 +431,11 @@ createApp({
             break;
           }
         }
-        this.hpDatasUpcoming = filteredEvents; // Stocker les événements filtrés dans le tableau Vue
+        this.hpDatasUpcoming = filteredEvents;
+        // console.log(this.hpDatasUpcoming)
         this.urlImgHeader = this.hpDatasUpcoming[0].filteredImage.url;
         this.titleHeader = this.hpDatasUpcoming[0].name;
+        this.urlHeader = this.hpDatasUpcoming[0].url;
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
@@ -502,6 +504,7 @@ createApp({
       querieSection.scrollIntoView({behavior: 'smooth'});
       this.isQuerie = true;
       this.searchResults = [];
+      this.hpDatasQuerie = [];
 
       const filteredEvents = [];
       fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&size=5&locale=fr-be`)
@@ -543,6 +546,8 @@ createApp({
         }
         
         this.hpDatasQuerie = filteredEvents;
+        this.resultsNumber = data.page.totalElements;
+
         console.log(this.hpDatasQuerie)
       })
       .catch(error => {
@@ -550,7 +555,7 @@ createApp({
       });
       this.searchResults = [];
       this.searchQuery = "";
-      this.hpDatasQuerie = [];
+      
     },
     /////////////Disable overlay when mobile menu open and resize////////////////
     handleResize(){

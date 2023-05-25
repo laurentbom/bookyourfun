@@ -59,7 +59,7 @@
     <header v-if="hpDatasUpcoming" class="header" @click="closeNav" :style="'background:url(' + urlImgHeader + ') center/cover'">
         <div class="header__content flex-c">
             <h2 class="header__content__title">{{titleHeader}}</h2>
-            <button class="header__content__btn btn" id="headerBtn">Tickets</button>
+            <a :href="urlHeader" class="header__content__btn btn" id="headerBtn">Tickets</a>
         </div>
     </header>
     <!-- Main -->
@@ -71,7 +71,7 @@
                 <div class="queries__title flex">
                     <div class="flex-c">
                         <h3>Recherche</h3>
-                        <span>x Résultats</span>
+                        <span>{{ resultsNumber }} Résultats</span>
                     </div>
                     <button class="closeQueries" @click="closeQueries"><i class="fa-solid fa-xmark"></i></button>
                 </div>
