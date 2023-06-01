@@ -10,6 +10,7 @@
   z-index: 4;
   overflow: hidden;
   font-family: $f4;
+  border-bottom: 5px var(--blue) inset;
   // Title
   &__title{
     background-color: #F6F6F6;

@@ -5,13 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BookYourFunn - Find the event for you !</title>
-    <link rel="icon" type="image/ico" href="img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+    <link rel="icon" sizes="32x32" href="img/favicon-32x32.png">
+    <link rel="icon" sizes="16x16" href="img/favicon-16x16.png">
+    <link rel="manifest" href="img/site.webmanifest">
+    <link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="css/styles.min.css">
     
 </head>
 
 <body id="byfApp">
+    <!-- Overlay grey -->
     <div v-if="overlay" class="overlay" @click="closeModal(), closeNav()"></div>
+    <!-- Desktop language & country select -->
+    <div class="desktopCountrySelect">
+        <ul>
+            <li v-if="language === 'fr'" class="desktopLanguageSelect">
+                <i class="fa-solid fa-comment"></i> <span class="active">fr</span><span @click="changeLanguage">en</span>
+            </li>
+            <li v-else class="desktopLanguageSelect">
+                <i class="fa-solid fa-comment"></i> <span @click="changeLanguage">fr</span><span class="active">en</span>
+            </li>
+            <li v-if="country === 'be'" class="desktopCountrySelect">
+                <i class="fa-solid fa-earth-americas"></i> <span class="active beFlag flag"></span><span @click="changeCountry('fr')" class="frFlag flag"></span><span @click="changeCountry('us')" class="usFlag flag"></span>
+            </li>
+            <li v-if="country === 'fr'" class="desktopCountrySelect">
+                <i class="fa-solid fa-earth-americas"></i> <span @click="changeCountry('be')" class="beFlag flag"></span><span class="active frFlag flag"></span><span @click="changeCountry('us')" class="usFlag flag"></span>
+            </li>
+            <li v-if="country === 'us'" class="desktopCountrySelect">
+                <i class="fa-solid fa-earth-americas"></i> <span @click="changeCountry('be')" class="beFlag flag"></span><span @click="changeCountry('fr')" class="frFlag flag"></span><span class="active usFlag flag"></span>
+            </li>
+        </ul>
+    </div>
     <!-- Nav & searchbar -->
     <nav class="navigation flex">
         <!-- Logo + burger -->
@@ -30,24 +58,41 @@
         <!-- Nav -->
         <ul :class="'flex navigation__main ' + mobileNavClass">
             <!-- Nav desktop Segments -->
-            <li v-for="(navLink, index) in navLinks" @click="getGenres(navLink.id)" :data-id="navLink.id"><a href="#">{{navLink.name}}</a></li>
-            <!-- Nav desktop Genres -->
-            <nav class="navGenres" v-if="genres.length > 0 && !isMobile">
-                <p>Genres:</p>
-                <ul v-show="genres.length > 0">
-                    <li v-for="(genre, index) in genres" :key="index" :data-id="genre.id" @click="listAppLaunch">{{genre.name}}</li>
-                </ul>
-                <button @click="closeNav"><i class="fa-solid fa-arrow-up"></i></button>
-                <a href="#" class="allGenres" :data-id="segment[0].id" @click="listAppLaunch">Voir tous les événements dans {{segment[0].name}}</a>
-            </nav>
+            <li v-for="(navLink, index) in navLinks" @click="subnavQuerie(navLink.id,'classification')" :data-id="navLink.id"><a href="#">{{navLink.name}}</a></li>
+            <li v-if="language === 'fr'" class="languageSelect mobileMargin">
+                Langue: <span class="active">fr</span><span @click="changeLanguage">en</span>
+            </li>
+            <li v-else class="languageSelect">
+                Language: <span @click="changeLanguage">fr</span><span class="active">en</span>
+            </li>
+            <li v-if="country === 'be' && language === 'fr'" class="languageSelect">
+                Pays: <span class="active">be</span><span @click="changeCountry('fr')">fr</span><span @click="changeCountry('us')">us</span>
+            </li>
+            <li v-if="country === 'be' && language === 'en'" class="languageSelect">
+                Country: <span class="active">be</span><span @click="changeCountry('fr')">fr</span><span @click="changeCountry('us')">us</span>
+            </li>
+            <li v-if="country === 'fr' && language === 'fr'" class="languageSelect">
+                Pays: <span @click="changeCountry('be')">be</span><span class="active">fr</span><span @click="changeCountry('us')">us</span>
+            </li>
+            <li v-if="country === 'fr' && language === 'en'" class="languageSelect">
+                Country: <span @click="changeCountry('be')">be</span><span class="active">fr</span><span @click="changeCountry('us')">us</span>
+            </li>
+            <li v-if="country === 'us' && language === 'fr'" class="languageSelect">
+                Pays: <span @click="changeCountry('be')">be</span><span @click="changeCountry('fr')">fr</span><span class="active">us</span>
+            </li>
+            <li v-if="country === 'us' && language === 'en'" class="languageSelect">
+                Country: <span @click="changeCountry('be')">be</span><span @click="changeCountry('fr')">fr</span><span class="active">us</span>
+            </li>
         </ul>
         <!-- Searchbar -->
         <div class="navigation__search flex  align-c">
-            <p>Recherche</p>
+            <p v-if="language === 'fr'">Recherche</p>
+            <p v-else>Search</p>
             <div class="navigation__search__bar flex">
-                <input v-model="searchQuery" @input="performSearch" @keyup.enter="searchWord" type="text" placeholder="Recherche par artiste, événement">
+                <input v-if="language === 'fr'" v-model="searchQuery" @input="performSearch" @keyup.enter="searchWord" type="text" placeholder="Recherche par artiste, événement">
+                <input v-else v-model="searchQuery" @input="performSearch" @keyup.enter="searchWord" type="text" placeholder="Search by artist, event">
                 <ul>
-                    <li v-if="searchQuery.length >= 1 && searchResults.length == 0" class="searchInputInfo">Taper au moins un mot</li>
+                    <li v-if="searchQuery.length >= 1 && searchResults.length == 0" class="searchInputInfo"><p v-if="language === 'fr'">Taper au moins un mot</p><p v-else>At least one word</p></li>
                     <li v-if="searchResults.length > 0" class="searchInputInfo">Suggestions</li>
                     <li  v-if="searchResults.length > 0" v-for="searchResult in searchResults" :key="searchResult.id" @click="modalLaunch(searchResult.id)"><a href="#">{{searchResult.name}}</a></li>
                 </ul>
@@ -70,8 +115,10 @@
             <section v-show="isQuerie" class="queries" id="querySection" ref="item">
                 <div class="queries__title flex">
                     <div class="flex-c">
-                        <h3>Recherche</h3>
-                        <span>{{ resultsNumber }} Résultats</span>
+                        <h3 v-if="language === 'fr'">Recherche</h3>
+                        <h3 v-else>Search</h3>
+                        <span v-if="language === 'fr'">{{ resultsNumber }} Résultats</span>
+                        <span v-else>{{ resultsNumber }} Results</span>
                     </div>
                     <button class="closeQueries" @click="closeQueries"><i class="fa-solid fa-xmark"></i></button>
                 </div>
@@ -99,7 +146,8 @@
             <!-- Upcoming section -->
             <section class="upcomingSuggests">
                 <!-- Title -->
-                <h3>Bientôt</h3>
+                <h3 v-if="language === 'fr'">Bientôt</h3>
+                <h3 v-else>Soon</h3>
                 <!-- List -->
                 <ul>
                     <!-- List Item -->
@@ -119,7 +167,8 @@
             <section class="musicSuggests">
                 <!-- Line -->
                 <div class="greyLine"></div>
-                <h3>Musique</h3>
+                <h3 v-if="language === 'fr'">Musique</h3>
+                <h3 v-else>Music</h3>
                 <ul>
                     <li v-if="hpDatasMusic" v-for="(event, index) in hpDatasMusic" :key="event.id" @click="modalLaunch(event.id)">
                             <div class="suggest__img flex-c">
@@ -136,7 +185,8 @@
             <section class="artSuggests">
                 <!-- Line -->
                 <div class="greyLine"></div>
-                <h3>Arts & théâtre</h3>
+                <h3 v-if="language === 'fr'">Arts & théâtre</h3>
+                <h3 v-else>Arts & theater</h3>
                 <ul>
                     <li v-if="hpDatasArt" v-for="(event, index) in hpDatasArt" :key="event.id" @click="modalLaunch(event.id)">
                             <div class="suggest__img flex-c">
@@ -169,7 +219,8 @@
         </div>
         <!-- Aside Suggests -->
         <aside class="main__aside">
-            <h3>Plus</h3>
+            <h3 v-if="language === 'fr'">Plus</h3>
+            <h3 v-else>More</h3>
             <ul class="suggests">
                 <li v-if="hpDatasSuggest" v-for="(event, index) in hpDatasSuggest" :key="event.id" @click="modalLaunch(event.id)">
                         <div class="aside__img">
@@ -180,7 +231,8 @@
             </ul>
             <div class="greyLine"></div>
             <div class="addAside">
-                <a href="#">Your add here</a>
+                <a v-if="language === 'fr'" href="#">Votre publicité ici</a>
+                <a v-else href="#">Your add here</a>
             </div>
         </aside>
         <!-- Modal Window -->
@@ -200,14 +252,14 @@
                             <!-- Title -->
                             <p>{{modalDatas.name}}</p>
                             <!-- Genre -->
-                            <p v-if="modalDatas._embedded.attractions"><strong>Genre:</strong> {{modalDatas._embedded.attractions[0].classifications[0].segment.name}}, {{modalDatas._embedded.attractions[0].classifications[0].genre.name}}</p>
+                            <p v-if="modalDatas._embedded.attractions && modalDatas._embedded.attractions[0].classifications[0].genre.name != 'Indéfini'"><strong>Genre:</strong> {{modalDatas._embedded.attractions[0].classifications[0].segment.name}}, {{modalDatas._embedded.attractions[0].classifications[0].genre.name}}</p>
                             <p v-else><strong>Genre:</strong> {{modalDatas.classifications[0].segment.name}}, {{modalDatas.classifications[0].genre.name}}</p>
                             <!-- Date -->
                             <p><strong>Date:</strong> {{modalDatas.filteredDate}}<span v-if="modalDatas.filteredTime">, {{modalDatas.filteredTime}}</span></p>
                             <!-- Adress -->
-                            <p><strong>Adresse:</strong> {{modalDatas._embedded.venues[0].address.line1}}, {{modalDatas._embedded.venues[0].city.name}}, {{modalDatas._embedded.venues[0].country.name}}</p>
+                            <p><strong v-if="language === 'fr'">Adresse:</strong><strong v-else>Adress:</strong> {{modalDatas._embedded.venues[0].address.line1}}, {{modalDatas._embedded.venues[0].city.name}}, {{modalDatas._embedded.venues[0].country.name}}</p>
                             <!-- Status -->
-                            <p><strong>Statut:</strong> {{modalDatas.dates.status.code}}</p>
+                            <p><strong v-if="language === 'fr'">Statut:</strong><strong v-else>Status:</strong> {{modalDatas.dates.status.code}}</p>
                         <a :href="modalDatas.url" class="btn">Tickets</a>
                     </div>
                 </div>
@@ -218,46 +270,50 @@
     </main>
     <!-- Footer -->
     <footer class="footer" @click="closeNav">
+        <!-- Content -->
         <div>
             <div class="footer__top">
                 <a href="#" class="footer__top__logo logo">BookYourFun</a>
-                <p>Use of <a href="https://www.ticketmaster.be/">TicketMaster</a>  API for a student work. No tickets are on sale on this website, only link to other websites from the API.</p>
-                <p>If needed contact me: <a href="mailto:laurent.bomal@gmail.com">laurent.bomal@gmail.com</a></p>
+                <p v-if="language === 'fr'">
+                    Utilisation de l'API <a href="https://www.ticketmaster.be/">TicketMaster</a> pour un travail étudiant. Aucun ticket ne sont fournis sur ce site, uniquement des liens de l'API pour acheter les tickets.
+                </p>
+                <p v-else>Use of <a href="https://www.ticketmaster.be/">TicketMaster</a>  API for a student work. No tickets are on sale on this website, only link to other websites from the API.</p>
+                <p v-if="language === 'fr'">
+                    Si besoin vous pouvez me contacter: <a href="mailto:laurent.bomal@gmail.com">laurent.bomal@gmail.com</a>
+                </p>
+                <p v-else>If needed contact me: <a href="mailto:laurent.bomal@gmail.com">laurent.bomal@gmail.com</a></p>
             </div>
             <nav class="footerNav">
                 <ul>
-                    <li v-if="isMobile" v-for="(navLink, index) in navLinks" :key="index" class="navFooterMobile">
-                        <a id="segmentFooterLink" href="#segmentFooterLink" @click="getGenresFooterMobile(navLink.id)" :data-id="navLink.id" class="segFooter">{{navLink.name}}</a>
-                        <ul class="dropdown-menu" v-show="(activeLinkId === navLink.id && showDropdown)">
-                            <li v-for="(genreFooter, index) in genresFooter" :key="index"><a href="#" class="genreFooterCss" :data-id="genreFooter.id">{{genreFooter.name}}</a></li>
-                            <li><a href="#" class="genreFooterCss">Tous</a></li>
-                        </ul>
-                    </li>
-                    <div v-else class="navFooterDesktop flex-c">
+                    <div class="navFooterDesktop flex-c">
                         <div class="footerDS">
+                            <p v-if="language === 'fr'">Trouve ton event</p>
+                            <p v-else>Find your event</p>
                             <li v-for="(navLink, index) in navLinks" :key="index">
-                                <a id="segmentFooterLinkDesktop" href="#segmentFooterLinkDesktop" @click="getGenresFooterDesktop(navLink.id)" :data-id="navLink.id" class="segFooter">{{navLink.name}}</a>
+                                <a id="segmentFooterLinkDesktop" href="#segmentFooterLinkDesktop" @click="subnavQuerie(navLink.id,'classification')" :data-id="navLink.id" class="segFooter">{{navLink.name}}</a>
                             </li>
-                        </div>
-                        <div class="footerDG flex-c">
-                            <span>Genres</span>
-                            <div class="footerDG__list">
-                                <p>Tous</p>
-                                <p v-for="(genreFooterDesktop, index) in genresFooterDesktop" :data-id="genreFooterDesktop.id" class="fade">{{genreFooterDesktop.name}}</p>
-                            </div>
                         </div>
                     </div>
                 </ul>
-
             </nav>
+            <div class="footer__socials">
+                <p v-if="language === 'fr'">Suivez mes autres projets</p>
+                <p v-else>Follow my other projects</p>
+                <a class="github-button" href="https://github.com/laurentbom" data-size="large" aria-label="Follow @laurentbom on GitHub">Follow @laurentbom</a>
+            </div>
         </div>
-        <div class="footer__copyright">
+        <!-- Copyright -->
+        <div v-if="language === 'fr'" class="footer__copyright">
             © 2023 Laurent Bomal. Tous droits réservés.
+        </div>
+        <div v-else class="footer__copyright">
+            © 2023 Laurent Bomal. All rights reserved.
         </div>
     </footer>
     <!-- Scripts -->
     <script src="https://kit.fontawesome.com/e6327d8d43.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.1/vue.global.min.js" integrity="sha512-adgKitI7rma1GrZi3dXfRvGXDVm8DzwbFs9UjdWeee5cslIrcgS9+PHj50Buc0i+kEXIEN9+Pu2OqikA3IJ2Xw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>    
     <script src="js/main.js"></script>
 </body>
 </html>

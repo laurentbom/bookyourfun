@@ -39,7 +39,6 @@
   &__main{
     margin-left: 30px;
     margin-right: auto;
-    gap: 15px;
     @media screen and (max-width:1300px){
       flex-direction: column;
       position: fixed;
@@ -51,7 +50,7 @@
       width: 50vw;
       height: 100vh;
       padding-top: 80px;
-      font-size: calc(20px + 1vw);
+      font-size: calc(16px + 1vw);
       z-index: 4;
       transition: .3s left ease;
       &.openMobile{
@@ -62,7 +61,7 @@
       width: 100vw;
     }
     & > li{
-      padding: 40px 8px;
+      padding: 40px 15px;
       cursor: pointer;
       a:focus{
         border: 1px solid black;
@@ -74,6 +73,33 @@
         padding: 25px 30px;
         &:hover, &:focus{
           background-color: darken(#f3f3f3, $amount: 10);
+        }
+      }
+    }
+    // Language select
+    .mobileMargin{
+      margin-top: auto;
+    }
+    .languageSelect{
+      @media screen and (min-width:1301px){
+        display: none;
+      }
+      font-size: 14px;
+      span{
+        margin-left: 15px;
+        text-transform: uppercase;
+        border: 1px solid lighten($color: #262626, $amount: 20);
+        border-radius: 15px;
+        padding: 5px 12px;
+        transition: all .2s ease-in-out;
+        &:hover{
+          background-color: lighten($color: #262626, $amount: 20);
+          color: #fff;
+        }
+        &.active{
+          background-color: var(--color);
+          color: #fff;
+          border: 1px solid var(--color);
         }
       }
     }
@@ -170,78 +196,6 @@
   }
 }
 
-///////////////////////////////////////////////
-///////Desktop Genres Navigation///////////////
-///////////////////////////////////////////////
-
-
-.navGenres{
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100vw;
-  z-index: 3;
-  background-color: #fff;
-  padding: 50px 40px 70px;
-  color: var(--color);
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 20px 0px;
-  font-family: $f1;
-  & > p{
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  ul{
-    columns: 3;
-    padding: 0px 16px;
-    li{
-      padding: 8px;
-      border-bottom: 1px solid #BFBFBF;
-      cursor: pointer;
-      transition: .2s all ease;
-      font-size: 18px;
-      font-weight: 400;
-      
-      &:hover{
-       background-color: #f3f3f3; 
-      }
-    }
-  }
-  button{
-    position: absolute;
-    right: 40px;
-    transform: translateX(-50%);
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-    i{
-      color: var(--color);
-      font-size: 30px;
-      margin-top: 10px;
-      transition: .15s all ease-in;
-      &:hover{
-        color: var(--blue);
-      }
-    }
-    
-  }
-  .allGenres{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 25px;
-    text-decoration: underline 2px solid var(--color);
-    color: var(--blue);
-    text-decoration: underline 2px solid var(--blue);
-    text-underline-offset: 6px;
-    transition: .15s all ease-in;
-    &:hover{
-      color: var(--color);
-      text-decoration: underline 2px solid var(--color);
-    }
-  }
-}
-
 
 
 ///////////////////////////////////////////////
@@ -250,14 +204,14 @@
 .footer{
   color: #fff;
   padding: 60px 20px;
-  min-height: 65vh;
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   & > div{
     @media screen and (min-width:1301px){
       display: flex;
-      gap:5vw;
+      margin-left: 30px;
     }
   }
   
@@ -276,7 +230,6 @@
     }
     & > p{
       font-size: 12px;
-      max-width: 50ch;
       line-height: 22px;
       margin-bottom: 60px;
       a{
@@ -293,9 +246,16 @@
   }
 }
 .footerNav{
-  @media screen and (min-width:1301px){
-    width: 100%;
+  margin-bottom: 50px;
+  margin-left: 100px;
+  margin-right: 50px;
+  @media screen and (max-width:1300px){
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    padding: 20px 0px;
+    margin-left: 0px;
   }
+  
 }
 .footerNav ul{
   list-style: none;
@@ -303,92 +263,48 @@
   flex-direction: column;
   color: #fff;
   @media screen and (min-width:1301px){
-    flex-direction: row;
     gap: 40px;
     text-align: center;
   }
-  ///////////////Footer Navigation Mobile///////////////
-  .navFooterMobile{
-    display: block;
-    position: relative;
-    .segFooter{
-      font-weight: 400;
-      font-size: 18px;
-      font-family: $f3;
-      border-top: 1px solid #BFBFBF;
-      display: block;
-      padding: 10px;
-      white-space: nowrap;
-      @media screen and (min-width:1301px){
-        border-top: none;
-        width: 180px;
-      }
-    }
-    a:last-child{
-      border-bottom: 1px solid #5b5b5b;
-      font-size: 12px;
-      font-style: italic;
-      &:hover{
-        background-color: darken(#bebebe, $amount: 10);
-      }
-    }
-    .dropdown-menu {
-      top: 100%;
-      left: 0;
-      width: 100%;
-      transition: all 0.3s ease;
-      @media screen and (min-width:1301px){
-        display: flex;
-        flex-direction: column;
-        gap: 0px;
-      }
-      .genreFooterCss{
-        display: block;
-        padding: 10px;
-        white-space: nowrap;
-      }
-    }
   }
   ///////////////Footer Navigation Desktop///////////////
   .navFooterDesktop{
-    width: 100%;
     .footerDS{
-      font-size: 26px;
-      display: flex;
-      gap: 80px;
-      margin-bottom: 50px;
-      margin-top: 8px;
-    }
-    .footerDG{
-      text-align: center;
       font-size: 16px;
-      border: 1px  #BFBFBF;
-      border-style: dashed;
-      border-radius: 4px;
-      padding: 30px 0px 10px;
-      margin-right: 100px;
-      span{
-        align-self: flex-start;
-        margin-bottom: 20px;
-        margin-top: -40px;
-        margin-left: 10px;
-        background-color: var(--bg-footer);
-        padding: 0 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 8px;
+      font-weight: 300;
+      @media screen and (max-width:1300px){
+          margin-top: 0px;
       }
       p{
-        margin-bottom: 20px;
-        cursor: pointer;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 25px;
+        font-family: $f4;
       }
-      &__list{
-        display: grid;
-        grid-template-columns: repeat(4,1fr);
-        & > p{
-          &:hover{
-            text-decoration: underline;
-            text-underline-offset: 5px;
-          }
+      li a{
+        &:hover{
+          border-bottom: 1px #fff solid;
         }
       }
     }
+  }
+
+
+.footer__socials{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 8px;
+  margin-right: 200px;
+  margin-left: auto;
+  p{
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    font-family: $f4;
   }
 }

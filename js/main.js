@@ -25,7 +25,7 @@ const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
 
 function test(){
-  fetch(`https://app.ticketmaster.com/discovery/v2/events?locale=fr-be&page=1&size=20&apikey=${apiKey}`)
+  fetch(`https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&genreId=KnvZfZ7vAA1`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -48,16 +48,15 @@ createApp({
         { name: "Sports", id: idSegmentSport },
         { name: "Divers", id: idSegmentAttractions }
       ],
-      genres: [],
-      genresFooter: [],
-      genresFooterDesktop: [],
+      // genres: [],
+      // genresFooter: [],
+      // genresFooterDesktop: [],
       segment: [],
       mobileNavClass : "",
       burgerNavClass : "",
       isMobile: false,
-      navIsHover: {},
-      showDropdown: false,
-      activeLinkId: "",
+      // showDropdown: false,
+      // activeLinkId: "",
       isQuerie: false,
       querieNextPage: "",
       queriePrevPage: "",
@@ -79,57 +78,36 @@ createApp({
       modalOpen : false,
       modalDatas : null,
       overlay : false,
-      language: "fr",
+      language: localStorage.getItem('language') || 'fr',
+      country: localStorage.getItem('country') || 'be',
       showButton: false,
     }
   },
 
   ///////////////////Responsive threshold & delay request API////////////////////////
   created() {
-    // Vérifie la résolution de l'écran et définit la propriété isMobile
-    const mediaQuery = window.matchMedia('(max-width: 1300px)')
-    this.isMobile = mediaQuery.matches
+    // // Vérifie la résolution de l'écran et définit la propriété isMobile
+    // const mediaQuery = window.matchMedia('(max-width: 1300px)')
+    // this.isMobile = mediaQuery.matches
 
-    // Ajoute un écouteur pour mettre à jour isMobile si la résolution de l'écran change
-    mediaQuery.addEventListener('change', () => {
-      this.isMobile = mediaQuery.matches
-    })
-    
+    // // Ajoute un écouteur pour mettre à jour isMobile si la résolution de l'écran change
+    // mediaQuery.addEventListener('change', () => {
+    //   this.isMobile = mediaQuery.matches
+    // })
   },
   methods : {
-    ////////////////Get segments & genres for main nav////////////////////
-    getGenres(idSegments){
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data);
-        this.genres = [];
-        this.segment = [];
-        for(i=0; i < 21; i++){
-          let genre = data._embedded.genres[i];
-          if(genre && genre.name && genre.id && genre.name != "Undefined"){
-            this.genres.push({name: genre.name, id: genre.id});
-          }
-        };
-        if(data.name && data.id){
-          this.segment.push({name: data.name, id: data.id});
-        }
-      })
-      .catch(error => {
-        console.error("Erreur lors de la récupération des données :", error); 
-      });
-    },
     /////////////////Close navs & modal window/////////////////
     closeNav(){
-      this.genres = [];
+      // this.genres = [];
       this.mobileNavClass = "";
       this.burgerNavClass = "";
       document.body.classList.remove('no-scroll');
+      this.overlay = false;
       this.searchResults = [];
       this.searchQuery = [];
     },
     closeModal(){
-      this.modalAnimClass = "";
+      // this.modalAnimClass = "";
       this.modalOpen = false;
       this.modalDatas = null;
       this.overlay = false;
@@ -150,225 +128,9 @@ createApp({
         this.overlay = true;
       }
     },
-    /////////////////Querie demand sub nav/////////////////
-    listAppLaunch(){
-      this.genres = [];
-      this.isQuerie = true;
-      const querieSection = this.$refs.item;
-      querieSection.scrollIntoView({behavior: 'smooth'});
-
-      
-    },
-    /////////////////Querie demand modal/////////////////
-    modalLaunch(id,type){
-      this.overlay = true;
-      this.modalDatas = null;
-      document.body.classList.add('no-scroll');
-      this.searchQuery = "";
-      this.searchResults = [];
-
-        fetch(`${apiUrl}/events/${id}?apikey=${apiKey}&locale=fr`)
-        .then(response => response.json())
-        .then(data => {
-          this.modalDatas = data;
-
-          // Date
-          const dateParts = this.modalDatas.dates.start.localDate.split('-');
-          const day = dateParts[2];
-          const month = dateParts[1];
-          const year = dateParts[0];
-          this.modalDatas.filteredDate = `${day}-${month}-${year}`;
-
-          // Image
-          const filteredImage = this.modalDatas.images.filter(image => image.width >= 1024);
-          this.modalDatas.filteredImage = filteredImage[0];
-
-          // Hour
-          if(this.modalDatas.dates.start.localTime != undefined){
-            var heureAPI = this.modalDatas.dates.start.localTime; 
-            var partiesHeure = heureAPI.split(":");
-            var heures = partiesHeure[0];
-            var minutes = partiesHeure[1];
-            var heureFormattee = heures + "h" + minutes;
-            this.modalDatas.filteredTime = heureFormattee;
-          }
-
-          // Status
-          if (this.language === 'fr') {
-            // Traduire les statuts en français
-            const statusTranslations = {
-              "onsale": "En vente",
-              "offsale": "Hors vente",
-              "canceled": "Annulé",
-              "postponed": "Reporté",
-              "rescheduled": "Reprogrammé"
-            };
-    
-            this.modalDatas.dates.status.code = statusTranslations[this.modalDatas.dates.status.code] || this.modalDatas.dates.status.code;
-          }
-
-      })
-      .catch(error => {
-        console.error("Erreur lors de la récupération des données :", error); 
-      });
-    },
-    ////////////////Get segments & genres for footer nav Desktop////////////////////
-    getGenresFooterMobile(idSegments) {
-      // Si le lien cliqué est le même que la navLink active, on ferme tous les sous-menus
-      if (this.activeLinkId === idSegments) {
-        this.showDropdown = false;
-        this.activeLinkId = "";
-      }
-      // Sinon on met à jour l'activeLink
-      else {
-        this.showDropdown = true;
-        this.activeLinkId = idSegments;
-      }
-
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data);
-        this.genresFooter = [];
-        for(i=0; i < 6; i++){
-          let genreFooter = data._embedded.genres[i];
-          if(genreFooter && genreFooter.name && genreFooter.id && genreFooter.name != "Undefined"){
-            this.genresFooter.push({name: genreFooter.name, id: genreFooter.id});
-          }
-        };
-      })
-      .catch(error => {
-        console.error("Erreur lors de la récupération des données :", error); 
-      });
-    },
-    ////////////////Get segments & genres for footer nav Mobile////////////////////
-    getGenresFooterDesktop(idSegments) {
-      fetch(`${apiUrl}/classifications/segments/${idSegments}?apikey=${apiKey}&locale=fr`)
-      .then(response => response.json())
-      .then(data => {
-        this.genresFooterDesktop = [];
-        for(i=0; i < 19; i++){
-          let genreFooterDesktop = data._embedded.genres[i];
-          if(genreFooterDesktop && genreFooterDesktop.name && genreFooterDesktop.id && genreFooterDesktop.name != "Undefined"){
-            this.genresFooterDesktop.push({name: genreFooterDesktop.name, id: genreFooterDesktop.id});
-          }
-        };
-      })
-      .catch(error => {
-        console.error("Erreur lors de la récupération des données :", error); 
-      });
-    },
-    ////////////////Get segments & genres for footer nav Mobile////////////////////
-    subnavQuerie(){
-
-    },
-    ////////////////Close Queries////////////////////
-    closeQueries(){
-      this.isQuerie = false;
-    },
-    queriePagination(prevOrNext){
-      
-      const filteredEvents = [];
-      if(prevOrNext === "next"){
-        fetch(`https://app.ticketmaster.com${this.querieNextPage}&apikey=${apiKey}`)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          if(data._links.next && data._links.next.href !== undefined){
-            this.querieNextPage = data._links.next.href;
-            this.showPaginationNext = true
-          } else {
-            this.showPaginationNext = false
-            this.querieNextPage = "";
-          }
-          if(data._links.prev && data._links.prev.href !== undefined){
-            this.queriePrevPage = data._links.prev.href;
-            this.showPaginationPrev = true
-            } else{
-              this.showPaginationPrev = false
-              this.queriePrevPage = "";
-            }
-  
-          for (const event of data._embedded.events) {
-            const filteredImages = event.images.filter(image => image.width >= 1024);
-            event.filteredImage = filteredImages[0];
-            const dateParts = event.dates.start.localDate.split('-');
-            const day = dateParts[2];
-            const month = dateParts[1];
-            const year = dateParts[0];
-            event.filteredDate = `${day}-${month}-${year}`;
-
-            // Hour
-            if(event.dates.start.localTime){
-              var heureAPI = event.dates.start.localTime; 
-              var partiesHeure = heureAPI.split(":");
-              var heures = partiesHeure[0];
-              var minutes = partiesHeure[1];
-              var heureFormattee = heures + "h" + minutes;
-              event.filteredTime = heureFormattee;
-            }
-            filteredEvents.push(event);
-          }
-          
-          this.hpDatasQuerie = filteredEvents;
-          // console.log(this.hpDatasQuerie)
-          })
-          .catch(error => {
-            console.error("Erreur lors de la récupération des données :", error); 
-          });
-      } else {
-        fetch(`https://app.ticketmaster.com${this.queriePrevPage}&apikey=${apiKey}`)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          if(data._links.next && data._links.next.href !== undefined){
-            this.querieNextPage = data._links.next.href;
-            this.showPaginationNext = true
-          } else {
-            this.showPaginationNext = false
-            this.querieNextPage = "";
-          }
-          if(data._links.prev && data._links.prev.href !== undefined){
-            this.queriePrevPage = data._links.prev.href;
-            this.showPaginationPrev = true
-            } else{
-              this.showPaginationPrev = false
-              this.queriePrevPage = "";
-            }
-  
-          for (const event of data._embedded.events) {
-            const filteredImages = event.images.filter(image => image.width >= 1024);
-            event.filteredImage = filteredImages[0];
-            const dateParts = event.dates.start.localDate.split('-');
-            const day = dateParts[2];
-            const month = dateParts[1];
-            const year = dateParts[0];
-            event.filteredDate = `${day}-${month}-${year}`;
-
-            // Hour
-            if(event.dates.start.localTime){
-              var heureAPI = event.dates.start.localTime; 
-              var partiesHeure = heureAPI.split(":");
-              var heures = partiesHeure[0];
-              var minutes = partiesHeure[1];
-              var heureFormattee = heures + "h" + minutes;
-              event.filteredTime = heureFormattee;
-            }
-            filteredEvents.push(event);
-          }
-          
-          this.hpDatasQuerie = filteredEvents;
-          console.log(this.hpDatasQuerie)
-          })
-          .catch(error => {
-            console.error("Erreur lors de la récupération des données :", error); 
-          });
-      }
-      
-    },
     ////////////////Get Homepage Datas////////////////////
-    getHomepageDatas(section,segment,pays,langue){
-      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${pays}&sort=random&locale=${langue}`)
+    getHomepageDatas(section,segment){
+      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${this.country}&sort=random&locale=${this.language}`)
       .then(response => response.json())
       .then(data => {
         // console.log(data)
@@ -382,11 +144,7 @@ createApp({
             event.filteredImage = filteredImages[0];
             filteredEvents.push(event);
             eventNames.add(event.name);
-            const dateParts = event.dates.start.localDate.split('-');
-            const day = dateParts[2];
-            const month = dateParts[1];
-            const year = dateParts[0];
-            event.filteredDate = `${day}-${month}-${year}`;
+            event.filteredDate = this.formatDate(event.dates.start.localDate);
           }
           
           // Sortir de la boucle lorsque 4 événements ont été récupérés
@@ -409,8 +167,8 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
-    getHomepageDatas2(pays,langue){
-      fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${pays}&sort=date,asc&locale=${langue}`)
+    getHomepageDatas2(){
+      fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${this.country}&sort=date,asc&locale=${this.language}`)
       .then(response => response.json())
       .then(data => {
         // console.log(data)
@@ -441,8 +199,8 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
 
-      //  Films
-      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${pays}&sort=random&size=5&locale=${langue}`)
+      //  Aside
+      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${this.country}&sort=random&size=5&locale=${this.language}`)
       .then(response => response.json())
       .then(data => {
         // console.log(data)
@@ -463,6 +221,180 @@ createApp({
         console.error("Erreur lors de la récupération des données :", error); 
       });
     },
+    /////////////////Datas form/////////////////
+    excludeUndefinedGenre(datas) {
+      if (datas._embedded.attractions[0].classifications[0].genre.name === "Indéfini") {
+        // datas._embedded.attractions[0].classifications.splice(0, 1);
+      }
+      return datas;
+    },
+    // Date
+    formatDate(date) {
+      const dateParts = date.split('-');
+      const day = dateParts[2];
+      const month = dateParts[1];
+      const year = dateParts[0];
+      return `${day}-${month}-${year}`;
+    },
+    // Hour
+    formatTime(time) {
+      if (time !== undefined) {
+        const partiesHeure = time.split(":");
+        const heures = partiesHeure[0];
+        const minutes = partiesHeure[1];
+        return heures + "h" + minutes;
+      }
+      return "";
+    },
+    /////////////////Querie modal/////////////////
+    modalLaunch(id){
+      this.overlay = true;
+      this.modalDatas = null;
+      document.body.classList.add('no-scroll');
+      this.searchQuery = "";
+      this.searchResults = [];
+
+        fetch(`${apiUrl}/events/${id}?apikey=${apiKey}&locale=${this.language}`)
+        .then(response => response.json())
+        .then(data => {
+          // console.log(data)
+          this.modalDatas = this.excludeUndefinedGenre(data);
+          // Date
+          this.modalDatas.filteredDate = this.formatDate(this.modalDatas.dates.start.localDate);
+
+          // Image
+          const filteredImage = this.modalDatas.images.filter(image => image.width >= 1024);
+          this.modalDatas.filteredImage = filteredImage[0];
+
+          // Hour
+          this.modalDatas.filteredTime = this.formatTime(this.modalDatas.dates.start.localTime);
+
+          // Status
+          if (this.language === 'fr') {
+            // Traduire les statuts en français
+            const statusTranslations = {
+              "onsale": "En vente",
+              "offsale": "Hors vente",
+              "canceled": "Annulé",
+              "postponed": "Reporté",
+              "rescheduled": "Reprogrammé"
+            };
+    
+            this.modalDatas.dates.status.code = statusTranslations[this.modalDatas.dates.status.code] || this.modalDatas.dates.status.code;
+          }
+          if (this.modalDatas.classifications[0].segment.name === "Indéfini") {
+            this.modalDatas.classifications.splice(0, 1);
+          }
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des données :", error); 
+      });
+    },
+    ////////////////////////////////////
+    subnavQuerie(id,typeQuerie){
+      // this.genres = [];
+      this.hpDatasQuerie = [];
+      this.closeNav();
+      let url = ""
+      const filteredEvents = [];
+      if(typeQuerie === "genre"){
+        url = `https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&size=5&countryCode=${this.country}&genreId=${id}&locale=${this.language}`;
+      } else if (typeQuerie === "classification"){
+        url = `https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&size=5&countryCode=${this.country}&classificationId=${id}&locale=${this.language}`;
+      }
+      fetch(`${url}`)
+        .then(response => response.json())
+        .then(data => {
+          // console.log(data);
+          this.isQuerie = true;
+
+          if(data._links.next && data._links.next.href !== undefined){
+            this.querieNextPage = data._links.next.href;
+            this.showPaginationNext = true
+          } else {
+            this.showPaginationNext = false
+          }
+          if(data._links.prev && data._links.prev.href !== undefined){
+            this.queriePrevPage = data._links.prev.href;
+            this.showPaginationPrev = true
+            } else{
+              this.showPaginationPrev = false
+            }
+  
+          for (const event of data._embedded.events) {
+            const filteredImages = event.images.filter(image => image.width >= 1024);
+            event.filteredImage = filteredImages[0];
+            // Date
+            event.filteredDate = this.formatDate(event.dates.start.localDate);
+            // Hour
+            event.filteredTime = this.formatTime(event.dates.start.localTime);
+            filteredEvents.push(event);
+          }
+          
+          this.hpDatasQuerie = filteredEvents;
+          this.resultsNumber = data.page.totalElements;
+          const querieSection = this.$refs.item;
+          querieSection.scrollIntoView({behavior: 'smooth'});
+          // console.log(this.hpDatasQuerie)
+        })
+        .catch(error => {
+          console.error("Erreur lors de la récupération des donnéess :", error); 
+          this.hpDatasQuerie = [];
+          this.isQuerie = false;
+        });
+      
+    },
+    ////////////////Close & pagination Queries////////////////////
+    closeQueries(){
+      this.isQuerie = false;
+    },
+    queriePagination(prevOrNext){
+      let url = "";
+      const filteredEvents = [];
+      if(prevOrNext === "next"){
+        url = this.querieNextPage;
+      } else {
+        url = this.queriePrevPage;
+      }
+        fetch(`https://app.ticketmaster.com${url}&apikey=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          // console.log(data);
+          if(data._links.next && data._links.next.href !== undefined){
+            this.querieNextPage = data._links.next.href;
+            this.showPaginationNext = true
+          } else {
+            this.showPaginationNext = false
+            this.querieNextPage = "";
+          }
+          if(data._links.prev && data._links.prev.href !== undefined){
+            this.queriePrevPage = data._links.prev.href;
+            this.showPaginationPrev = true
+            } else{
+              this.showPaginationPrev = false
+              this.queriePrevPage = "";
+            }
+  
+          for (const event of data._embedded.events) {
+            // Image
+            const filteredImages = event.images.filter(image => image.width >= 1024);
+            event.filteredImage = filteredImages[0];
+            // Date
+            event.filteredDate = this.formatDate(event.dates.start.localDate);
+            // Hour
+            if(event.dates.start.localTime){
+              event.filteredTime = this.formatTime(event.dates.start.localTime);
+            }
+            filteredEvents.push(event);
+          }
+          
+          this.hpDatasQuerie = filteredEvents;
+          // console.log(this.hpDatasQuerie)
+          })
+          .catch(error => {
+            console.error("Erreur lors de la récupération des données :", error); 
+          });
+    },
     ////////////////Search suggestions////////////////////
     performSearch() {
       clearTimeout(this.debounceTimer); // Annuler le délai précédent
@@ -470,10 +402,10 @@ createApp({
       if (this.searchQuery.length >= 2) {
         // Définir un nouveau délai de 300 millisecondes avant d'effectuer la requête API
         this.debounceTimer = setTimeout(() => {
-          fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&includeSpellcheck=yes&countryCode=be&locale=fr`)
+          fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&includeSpellcheck=yes&countryCode=${this.country}&locale=${this.language}`)
             .then(response => response.json())
             .then(data => {
-              console.log(data)
+              // console.log(data)
               if (data._embedded.events != undefined) {
                 this.searchAllResults = data._embedded.events;
 
@@ -505,12 +437,12 @@ createApp({
       this.isQuerie = true;
       this.searchResults = [];
       this.hpDatasQuerie = [];
-
       const filteredEvents = [];
-      fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&size=5&locale=fr-be`)
+
+      fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&size=5&sort=date,asc&countryCode=${this.country}&locale=${this.language}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        // console.log(data)
         if(data._links.next && data._links.next.href !== undefined){
           this.querieNextPage = data._links.next.href;
           this.showPaginationNext = true
@@ -525,22 +457,14 @@ createApp({
           }
 
         for (const event of data._embedded.events) {
+          // Image
           const filteredImages = event.images.filter(image => image.width >= 1024);
           event.filteredImage = filteredImages[0];
-          const dateParts = event.dates.start.localDate.split('-');
-          const day = dateParts[2];
-          const month = dateParts[1];
-          const year = dateParts[0];
-          event.filteredDate = `${day}-${month}-${year}`;
-
+          // Date
+          event.filteredDate = this.formatDate(event.dates.start.localDate);
           // Hour
           if(event.dates.start.localTime){
-            var heureAPI = event.dates.start.localTime; 
-            var partiesHeure = heureAPI.split(":");
-            var heures = partiesHeure[0];
-            var minutes = partiesHeure[1];
-            var heureFormattee = heures + "h" + minutes;
-            event.filteredTime = heureFormattee;
+            event.filteredTime = this.formatTime(event.dates.start.localTime);
           }
           filteredEvents.push(event);
         }
@@ -548,14 +472,13 @@ createApp({
         this.hpDatasQuerie = filteredEvents;
         this.resultsNumber = data.page.totalElements;
 
-        console.log(this.hpDatasQuerie)
+        // console.log(this.hpDatasQuerie)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
       this.searchResults = [];
       this.searchQuery = "";
-      
     },
     /////////////Disable overlay when mobile menu open and resize////////////////
     handleResize(){
@@ -577,29 +500,168 @@ createApp({
         top: 0,
         behavior: "smooth",
       });
-    }
+    },
+    /////////////Change language////////////////
+    changeLanguage() {
+      this.hpDatasQuerie = [];
+      this.isQuerie = false;
+      if (this.language === 'fr') {
+        console.log('fr to en')
+        this.language = 'en'
+        this.navLinks.forEach(link => {
+          switch (link.name) {
+            case "Musique":
+              link.name = "Music";
+              break;
+            case "Arts et théâtre":
+              link.name = "Arts and Theatre";
+              break;
+            case "Films":
+              link.name = "Movies";
+              break;
+            case "Sports":
+              link.name = "Sports";
+              break;
+            case "Divers":
+              link.name = "Miscellaneous";
+              break;
+            // Ajoutez d'autres cas pour les autres noms
+          }
+        });
+        setTimeout(() => {
+          this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
+          }, 1000);
+        
+          setTimeout(() => {
+            this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
+          }, 1500);
+        
+          setTimeout(() => {
+            this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
+          }, 2000);
+        
+          setTimeout(() => {
+            this.getHomepageDatas2();
+          }, 400);
+      } else if (this.language === 'en') {
+        console.log('en to fr')
+        this.language = 'fr'
+        this.navLinks.forEach(link => {
+          switch (link.name) {
+            case "Music":
+              link.name = "Musique";
+              break;
+            case "Arts and Theatre":
+              link.name = "Arts et théâtre";
+              break;
+            case "Movies":
+              link.name = "Films";
+              break;
+            case "Sports":
+              link.name = "Sports";
+              break;
+            case "Miscellaneous":
+              link.name = "Divers";
+              break;
+            // Ajoutez d'autres cas pour les autres noms
+          }
+        });
+        setTimeout(() => {
+          this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
+          }, 1000);
+        
+          setTimeout(() => {
+            this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
+          }, 1500);
+        
+          setTimeout(() => {
+            this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
+          }, 2000);
+        
+          setTimeout(() => {
+            this.getHomepageDatas2();
+          }, 400);
+      }
+    },
+    /////////////Change Country////////////////
+    changeCountry(pays){
+      this.closeNav();
+      this.hpDatasQuerie = [];
+      this.isQuerie = false;
+      this.country = pays;
+      setTimeout(() => {
+        this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
+        }, 1000);
+      
+        setTimeout(() => {
+          this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
+        }, 1500);
+      
+        setTimeout(() => {
+          this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
+        }, 2000);
+      
+        setTimeout(() => {
+          this.getHomepageDatas2();
+        }, 400);
+    },
   },
   mounted(){
-    window.addEventListener("scroll", this.handleScroll);
-    // Timeout because of limit of 5 calls/sec of API
-    setTimeout(() => {
-      this.getGenresFooterDesktop(idSegmentMusic);
-    }, 3000);
+    const storedLanguage = localStorage.getItem('language');
+    const storedCountry = localStorage.getItem('country');
+    if(storedCountry){
+      this.country = storedCountry;
+    }
+    if (storedLanguage) {
+      this.language = storedLanguage;
 
+      // Mettre à jour les noms dans navLinks en fonction de la langue
+      switch (storedLanguage) {
+        case 'fr':
+          // Utilisez les noms par défaut
+          break;
+        case 'en':
+          // Mettez à jour les noms en anglais
+          this.navLinks.forEach(link => {
+            switch (link.name) {
+              case "Musique":
+                link.name = "Music";
+                break;
+              case "Arts et théâtre":
+                link.name = "Arts and Theatre";
+                break;
+              case "Films":
+                link.name = "Movies";
+                break;
+              case "Sports":
+                link.name = "Sports";
+                break;
+              case "Divers":
+                link.name = "Miscellaneous";
+                break;
+              // Ajoutez d'autres cas pour les autres noms
+            }
+          });
+          break;
+      }
+    }
+
+    window.addEventListener("scroll", this.handleScroll);
+   
     setTimeout(() => {
-    this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic, 'be', 'fr');
+    this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
     }, 1000);
   
     setTimeout(() => {
-      this.getHomepageDatas("this.hpDatasArt", idSegmentArt, 'be', 'fr');
+      this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
     }, 1500);
   
     setTimeout(() => {
-      this.getHomepageDatas("this.hpDatasSport", idSegmentSport, 'be', 'fr');
+      this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
     }, 2000);
   
     // setTimeout(() => {
-      this.getHomepageDatas2('be', 'fr');
+      this.getHomepageDatas2();
     // }, 400);
 
     // Disable overlay when mobile menu open and resize
@@ -614,6 +676,16 @@ createApp({
           querieSection.scrollIntoView({ behavior: 'smooth' });
         });
       }
-    }
-  }
+    },
+    language(newLanguage) {
+      localStorage.setItem('language', newLanguage); // Stocke la nouvelle valeur de 'language' dans le localStorage
+    },
+    country(newCountry) {
+      localStorage.setItem('country', newCountry); // Stocke la nouvelle valeur de 'language' dans le localStorage
+    },
+  },
+  // beforeDestroy() {
+  //   // Nettoie la valeur de 'language' dans le localStorage lorsque le composant est détruit
+  //   localStorage.removeItem('language');
+  // }
 }).mount("#byfApp")

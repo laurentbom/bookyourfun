@@ -1,6 +1,70 @@
+.desktopCountrySelect{
+  @media screen and (max-width:1300px){
+    display: none;
+  }
+  background-color: #121212;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 300;
+  ul{
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    li span{
+      margin-left: 10px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .desktopLanguageSelect{
+      i{
+        font-size: 20px;
+      }
+      span{
+        &.active{
+          border-bottom: 1px solid #fff;
+        }
+      }
+    }
+    .desktopCountrySelect{
+      display: flex;
+      align-items: center;
+      i{
+        font-size: 25px;
+        margin-right: 5px;
+      }
+    }
+    .flag{
+      border: 1px solid #ffffff65;
+      border-radius: 50px;
+      width: 25px;
+      height: 25px;
+      transition: .2s transform ease-out;
+      position: relative;
+      overflow: hidden;
+      filter: saturate(10%);
+      &:hover{
+        transform: scale(1.2);
+      }
+      &.active{
+        filter: saturate(1);
+      }
+    }
+    .beFlag{
+      background: url('/img/be.png') center/cover;
+    }
+    .frFlag{
+      background: url('/img/fr.png') center/cover;
+    }
+    .usFlag{
+      background: url('/img/us.png') center/cover;
+    }
+  }
+}
 .header{
   min-height: 30vw;
-  background-position: center;
+  background-position: bottom;
   background-size: cover;
   color: #fff;
   position: relative;
