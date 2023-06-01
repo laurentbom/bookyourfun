@@ -21,11 +21,11 @@ const idSegmentArt = "KZFzniwnSyZfZ7v7na";
 const idSegmentAttractions = "KZFzniwnSyZfZ7v7n1";
 const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
-// Z698xZG2Zau1t
+// rZ7SnyZ1AdbP0S
 
 
 function test(){
-  fetch(`https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&genreId=KnvZfZ7vAA1`)
+  fetch(`${apiUrl}/events/rZ7SnyZ1AdbP0S?apikey=${apiKey}&locale=fr-fr`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -222,12 +222,6 @@ createApp({
       });
     },
     /////////////////Datas form/////////////////
-    excludeUndefinedGenre(datas) {
-      if (datas._embedded.attractions[0].classifications[0].genre.name === "Indéfini") {
-        // datas._embedded.attractions[0].classifications.splice(0, 1);
-      }
-      return datas;
-    },
     // Date
     formatDate(date) {
       const dateParts = date.split('-');
@@ -257,8 +251,8 @@ createApp({
         fetch(`${apiUrl}/events/${id}?apikey=${apiKey}&locale=${this.language}`)
         .then(response => response.json())
         .then(data => {
-          // console.log(data)
-          this.modalDatas = this.excludeUndefinedGenre(data);
+          console.log(data)
+          this.modalDatas = data;
           // Date
           this.modalDatas.filteredDate = this.formatDate(this.modalDatas.dates.start.localDate);
 
@@ -281,9 +275,6 @@ createApp({
             };
     
             this.modalDatas.dates.status.code = statusTranslations[this.modalDatas.dates.status.code] || this.modalDatas.dates.status.code;
-          }
-          if (this.modalDatas.classifications[0].segment.name === "Indéfini") {
-            this.modalDatas.classifications.splice(0, 1);
           }
       })
       .catch(error => {
@@ -505,7 +496,7 @@ createApp({
     changeLanguage() {
       this.hpDatasQuerie = [];
       this.isQuerie = false;
-      if (this.language === 'fr') {
+      if (this.language === 'fr' || this.language ==='fr-fr') {
         console.log('fr to en')
         this.language = 'en'
         this.navLinks.forEach(link => {
@@ -589,6 +580,9 @@ createApp({
       this.hpDatasQuerie = [];
       this.isQuerie = false;
       this.country = pays;
+      if((pays === 'fr') && (this.language === "fr")){
+        // this.language = "fr-fr";
+      }
       setTimeout(() => {
         this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
         }, 1000);

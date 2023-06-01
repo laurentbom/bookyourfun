@@ -23,20 +23,23 @@
     <!-- Desktop language & country select -->
     <div class="desktopCountrySelect">
         <ul>
+            <!-- Language -->
             <li v-if="language === 'fr'" class="desktopLanguageSelect">
                 <i class="fa-solid fa-comment"></i> <span class="active">fr</span><span @click="changeLanguage">en</span>
             </li>
             <li v-else class="desktopLanguageSelect">
                 <i class="fa-solid fa-comment"></i> <span @click="changeLanguage">fr</span><span class="active">en</span>
             </li>
+            <!-- Country -->
             <li v-if="country === 'be'" class="desktopCountrySelect">
-                <i class="fa-solid fa-earth-americas"></i> <span class="active beFlag flag"></span><span @click="changeCountry('fr')" class="frFlag flag"></span><span @click="changeCountry('us')" class="usFlag flag"></span>
+                <i class="fa-solid fa-earth-americas"></i> <span class="active flag"><img src="img/be.png" alt=""></span><span @click="changeCountry('fr')" class="flag"><img src="img/fr.png" alt="">
+                </span><span @click="changeCountry('us')" class="flag"><img src="img/us.png" alt=""></span>
             </li>
             <li v-if="country === 'fr'" class="desktopCountrySelect">
-                <i class="fa-solid fa-earth-americas"></i> <span @click="changeCountry('be')" class="beFlag flag"></span><span class="active frFlag flag"></span><span @click="changeCountry('us')" class="usFlag flag"></span>
+                <i class="fa-solid fa-earth-americas"></i> <span @click="changeCountry('be')" class="flag"><img src="img/be.png" alt=""></span><span class="active flag"><img src="img/fr.png" alt=""></span><span @click="changeCountry('us')" class="flag"><img src="img/us.png" alt=""></span>
             </li>
             <li v-if="country === 'us'" class="desktopCountrySelect">
-                <i class="fa-solid fa-earth-americas"></i> <span @click="changeCountry('be')" class="beFlag flag"></span><span @click="changeCountry('fr')" class="frFlag flag"></span><span class="active usFlag flag"></span>
+                <i class="fa-solid fa-earth-americas"></i> <span @click="changeCountry('be')" class="flag"><img src="img/be.png" alt=""></span><span @click="changeCountry('fr')" class="flag"><img src="img/fr.png" alt=""></span><span class="active flag"><img src="img/us.png" alt=""></span>
             </li>
         </ul>
     </div>
@@ -252,7 +255,7 @@
                             <!-- Title -->
                             <p>{{modalDatas.name}}</p>
                             <!-- Genre -->
-                            <p v-if="modalDatas._embedded.attractions && modalDatas._embedded.attractions[0].classifications[0].genre.name != 'Indéfini'"><strong>Genre:</strong> {{modalDatas._embedded.attractions[0].classifications[0].segment.name}}, {{modalDatas._embedded.attractions[0].classifications[0].genre.name}}</p>
+                            <p v-if="modalDatas._embedded.attractions && modalDatas._embedded.attractions[0].classifications[0].genre.name != 'Indéfini' && modalDatas._embedded.attractions[0].classifications[0].genre.name != 'Undefined'"><strong>Genre:</strong> {{modalDatas._embedded.attractions[0].classifications[0].segment.name}}, {{modalDatas._embedded.attractions[0].classifications[0].genre.name}}</p>
                             <p v-else><strong>Genre:</strong> {{modalDatas.classifications[0].segment.name}}, {{modalDatas.classifications[0].genre.name}}</p>
                             <!-- Date -->
                             <p><strong>Date:</strong> {{modalDatas.filteredDate}}<span v-if="modalDatas.filteredTime">, {{modalDatas.filteredTime}}</span></p>

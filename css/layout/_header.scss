@@ -43,6 +43,11 @@
       transition: .2s transform ease-out;
       position: relative;
       overflow: hidden;
+      img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
       filter: saturate(10%);
       &:hover{
         transform: scale(1.2);
@@ -50,15 +55,6 @@
       &.active{
         filter: saturate(1);
       }
-    }
-    .beFlag{
-      background: url('/img/be.png') center/cover;
-    }
-    .frFlag{
-      background: url('/img/fr.png') center/cover;
-    }
-    .usFlag{
-      background: url('/img/us.png') center/cover;
     }
   }
 }
