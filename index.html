@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookYourFunn - Find the event for you !</title>
+    <title>BookYourFun - Find the event for you !</title>
     <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
     <link rel="icon" sizes="32x32" href="img/favicon-32x32.png">
     <link rel="icon" sizes="16x16" href="img/favicon-16x16.png">
@@ -25,7 +25,7 @@
         <ul>
             <!-- Language -->
             <li v-if="language === 'fr'" class="desktopLanguageSelect">
-                <i class="fa-solid fa-comment"></i> <span class="active">fr</span><span @click="changeLanguage">en</span>
+                <i class="fa-solid fa-comment"></i> <span class="active">fr</span><span @click="changeLanguage"  v-if="country != 'fr'">en</span>
             </li>
             <li v-else class="desktopLanguageSelect">
                 <i class="fa-solid fa-comment"></i> <span @click="changeLanguage">fr</span><span class="active">en</span>
@@ -63,7 +63,7 @@
             <!-- Nav desktop Segments -->
             <li v-for="(navLink, index) in navLinks" @click="subnavQuerie(navLink.id,'classification')" :data-id="navLink.id"><a href="#">{{navLink.name}}</a></li>
             <li v-if="language === 'fr'" class="languageSelect mobileMargin">
-                Langue: <span class="active">fr</span><span @click="changeLanguage">en</span>
+                Langue: <span class="active">fr</span><span @click="changeLanguage"  v-if="country != 'fr'">en</span>
             </li>
             <li v-else class="languageSelect">
                 Language: <span @click="changeLanguage">fr</span><span class="active">en</span>
