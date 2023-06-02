@@ -13,14 +13,14 @@
   padding: 0px 16px;
   position: relative;
   &__left{
-    @media screen and (max-width:680px){
+    @media screen and (max-width:700px){
       align-self: flex-start;
     }
   }
   @media screen and (min-width:900px){
     padding: 0px 40px;
   }
-  @media screen and (max-width:680px){
+  @media screen and (max-width:700px){
     flex-direction: column;
     align-items: center;
   }
@@ -57,7 +57,7 @@
         left: 0;
       }
     }
-    @media screen and (max-width:680px){
+    @media screen and (max-width:700px){
       width: 100vw;
     }
     & > li{
@@ -76,7 +76,7 @@
           background-color: darken(#f3f3f3, $amount: 10);
         }
       }
-      @media screen and (max-width:680px){
+      @media screen and (max-width:700px){
         padding: 20px 15px;
       }
     }
@@ -109,13 +109,13 @@
   &__search{
     gap: 15px;
     margin-left: auto;
-    @media screen and (max-width:680px){
+    @media screen and (max-width:700px){
       margin-left: 0px;
       width: 100%;
     }
 
     & > p{
-      @media screen and (max-width:680px){
+      @media screen and (max-width:700px){
         display: none;
       }
     }
@@ -150,7 +150,7 @@
       input,button{
         border: none;
       }
-      @media screen and (max-width:680px){
+      @media screen and (max-width:700px){
         width: 100%;
       }
       input{
@@ -168,7 +168,7 @@
             color: rgb(26, 25, 25);
           }
         }
-        @media screen and (max-width:680px){
+        @media screen and (max-width:700px){
           width: 90%;
           margin-bottom: 10px;
         }
@@ -189,7 +189,7 @@
           background-color: #f9f9f9;
           color: rgb(26, 25, 25);
         }
-        @media screen and (max-width:680px){
+        @media screen and (max-width:700px){
           margin-bottom: 10px;
         }
       }
