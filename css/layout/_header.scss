@@ -59,12 +59,10 @@
   }
 }
 .header{
-  min-height: 30vw;
-  background-position: bottom;
-  background-size: cover;
+  height: 35vw;
+  width: 100%;
   color: #fff;
   position: relative;
-  width: 100%;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 20px 0px;
   position: relative;
   &::after{

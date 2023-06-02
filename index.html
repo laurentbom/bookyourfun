@@ -270,6 +270,8 @@
         </div>
         <!-- To the top button -->
         <button v-if="showButton" class="topButton" @click="toTheTop"><i class="fa-solid fa-arrow-up"></i></button>
+        <!-- scrollBar -->
+        <div class="scroll-bar" :style="{ width: barWidth + '%' }"></div>
     </main>
     <!-- Footer -->
     <footer class="footer" @click="closeNav">

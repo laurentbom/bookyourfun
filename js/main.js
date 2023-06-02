@@ -22,10 +22,10 @@ const idSegmentAttractions = "KZFzniwnSyZfZ7v7n1";
 const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
 // rZ7SnyZ1AdbP0S
-
+// import axios from 'axios';
 
 function test(){
-  fetch(`${apiUrl}/events/rZ7SnyZ1AdbP0S?apikey=${apiKey}&locale=fr-fr`)
+  fetch(`${apiUrl}/events/rZ7SnyZ1AdbNCA?apikey=${apiKey}&locale=en`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -48,15 +48,10 @@ createApp({
         { name: "Sports", id: idSegmentSport },
         { name: "Divers", id: idSegmentAttractions }
       ],
-      // genres: [],
-      // genresFooter: [],
-      // genresFooterDesktop: [],
       segment: [],
       mobileNavClass : "",
       burgerNavClass : "",
       isMobile: false,
-      // showDropdown: false,
-      // activeLinkId: "",
       isQuerie: false,
       querieNextPage: "",
       queriePrevPage: "",
@@ -81,19 +76,20 @@ createApp({
       language: localStorage.getItem('language') || 'fr',
       country: localStorage.getItem('country') || 'be',
       showButton: false,
+      barWidth : 0,
     }
   },
 
   ///////////////////Responsive threshold & delay request API////////////////////////
   created() {
     // // Vérifie la résolution de l'écran et définit la propriété isMobile
-    // const mediaQuery = window.matchMedia('(max-width: 1300px)')
-    // this.isMobile = mediaQuery.matches
+    const mediaQuery = window.matchMedia('(max-width: 1300px)')
+    this.isMobile = mediaQuery.matches
 
     // // Ajoute un écouteur pour mettre à jour isMobile si la résolution de l'écran change
-    // mediaQuery.addEventListener('change', () => {
-    //   this.isMobile = mediaQuery.matches
-    // })
+    mediaQuery.addEventListener('change', () => {
+      this.isMobile = mediaQuery.matches
+    })
   },
   methods : {
     /////////////////Close navs & modal window/////////////////
@@ -129,13 +125,16 @@ createApp({
       }
     },
     ////////////////Get Homepage Datas////////////////////
-    getHomepageDatas(section,segment){
-      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${this.country}&sort=random&locale=${this.language}`)
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data)
+    async getHomepageDatas(section, segment) {
+      let url = `${apiUrl}/events?apikey=${apiKey}&classificationId=${segment}&countryCode=${this.country}&sort=random&locale=${this.language}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Erreur lors de l\'appel de l\'API');
+        }
+        const data = await response.json();
         const filteredEvents = [];
-
+    
         // Filtrer les événements avec des noms différents
         const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
         for (const event of data._embedded.events) {
@@ -152,43 +151,49 @@ createApp({
             break;
           }
         }
-
-        if(section == "this.hpDatasMusic"){
+    
+        if (section === "this.hpDatasMusic") {
           this.hpDatasMusic = filteredEvents;
         } 
-        if(section == "this.hpDatasArt"){
+        if (section === "this.hpDatasArt") {
           this.hpDatasArt = filteredEvents;
         } 
-        if(section == "this.hpDatasSport"){
+        if (section === "this.hpDatasSport") {
           this.hpDatasSport = filteredEvents;
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error("Erreur lors de la récupération des données :", error); 
-      });
+      }
     },
-    getHomepageDatas2(){
+    async getHomepageDatas2(){
       fetch(`${apiUrl}/events?apikey=${apiKey}&countryCode=${this.country}&sort=date,asc&locale=${this.language}`)
       .then(response => response.json())
       .then(data => {
-        // console.log(data)
+        let count = 0;
         const filteredEvents = [];
+        const filteredEventsAside = [];
+        const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
 
         // Filtrer les événements avec des noms différents
-        const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
         for (const event of data._embedded.events) {
           const filteredImages = event.images.filter(image => image.width >= 1024);
           if (!eventNames.has(event.name) && filteredImages.length > 0) {
             event.filteredImage = filteredImages[0];
-            filteredEvents.push(event);
             eventNames.add(event.name);
+            if(count < 4){
+              filteredEvents.push(event);
+            }
+            if (count >= 4) {
+              filteredEventsAside.push(event);
+            }
+            count++;
           }
 
-          // Sortir de la boucle lorsque 4 événements ont été récupérés
-          if (filteredEvents.length === 4) {
+          if (count === 9) {
             break;
           }
         }
+        this.hpDatasSuggest = filteredEventsAside;
         this.hpDatasUpcoming = filteredEvents;
         // console.log(this.hpDatasUpcoming)
         this.urlImgHeader = this.hpDatasUpcoming[0].filteredImage.url;
@@ -200,26 +205,26 @@ createApp({
       });
 
       //  Aside
-      fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${this.country}&sort=random&size=5&locale=${this.language}`)
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data)
-        const filteredEvents = [];
-        const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
-        for (const event of data._embedded.events) {
-          const filteredImages = event.images.filter(image => image.width >= 1024);
-          if (!eventNames.has(event.name) && filteredImages.length > 0) {
-            event.filteredImage = filteredImages[0];
-            filteredEvents.push(event);
-            eventNames.add(event.name);
-          }
-        }
-        this.hpDatasSuggest = filteredEvents;
-        // console.log(this.hpDatasSuggest)
-      })
-      .catch(error => {
-        console.error("Erreur lors de la récupération des données :", error); 
-      });
+      // fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${this.country}&sort=random&size=5&locale=${this.language}`)
+      // .then(response => response.json())
+      // .then(data => {
+      //   // console.log(data)
+      //   const filteredEvents = [];
+      //   const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
+      //   for (const event of data._embedded.events) {
+      //     const filteredImages = event.images.filter(image => image.width >= 1024);
+      //     if (!eventNames.has(event.name) && filteredImages.length > 0) {
+      //       event.filteredImage = filteredImages[0];
+      //       filteredEvents.push(event);
+      //       eventNames.add(event.name);
+      //     }
+      //   }
+      //   this.hpDatasSuggest = filteredEvents;
+      //   // console.log(this.hpDatasSuggest)
+      // })
+      // .catch(error => {
+      //   console.error("Erreur lors de la récupération des données :", error); 
+      // });
     },
     /////////////////Datas form/////////////////
     // Date
@@ -242,16 +247,14 @@ createApp({
     },
     /////////////////Querie modal/////////////////
     modalLaunch(id){
-      this.overlay = true;
       this.modalDatas = null;
-      document.body.classList.add('no-scroll');
       this.searchQuery = "";
       this.searchResults = [];
 
         fetch(`${apiUrl}/events/${id}?apikey=${apiKey}&locale=${this.language}`)
         .then(response => response.json())
         .then(data => {
-          console.log(data)
+          // console.log(data)
           this.modalDatas = data;
           // Date
           this.modalDatas.filteredDate = this.formatDate(this.modalDatas.dates.start.localDate);
@@ -269,13 +272,15 @@ createApp({
             const statusTranslations = {
               "onsale": "En vente",
               "offsale": "Hors vente",
-              "canceled": "Annulé",
+              "cancelled": "Annulé",
               "postponed": "Reporté",
               "rescheduled": "Reprogrammé"
             };
     
             this.modalDatas.dates.status.code = statusTranslations[this.modalDatas.dates.status.code] || this.modalDatas.dates.status.code;
           }
+          this.overlay = true;
+          document.body.classList.add('no-scroll');
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
@@ -476,6 +481,7 @@ createApp({
       if(this.isMobile && !this.modalDatas){
         this.overlay= false;
         document.body.classList.remove('no-scroll');
+        this.closeNav();
       }
     },
     /////////////To the top button////////////////
@@ -496,8 +502,7 @@ createApp({
     changeLanguage() {
       this.hpDatasQuerie = [];
       this.isQuerie = false;
-      if (this.language === 'fr' || this.language ==='fr-fr') {
-        console.log('fr to en')
+      if (this.language === 'fr' && this.country != "fr") {
         this.language = 'en'
         this.navLinks.forEach(link => {
           switch (link.name) {
@@ -516,26 +521,10 @@ createApp({
             case "Divers":
               link.name = "Miscellaneous";
               break;
-            // Ajoutez d'autres cas pour les autres noms
           }
         });
-        setTimeout(() => {
-          this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
-          }, 1000);
-        
-          setTimeout(() => {
-            this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
-          }, 1500);
-        
-          setTimeout(() => {
-            this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
-          }, 2000);
-        
-          setTimeout(() => {
-            this.getHomepageDatas2();
-          }, 400);
+        this.fetchData();
       } else if (this.language === 'en') {
-        console.log('en to fr')
         this.language = 'fr'
         this.navLinks.forEach(link => {
           switch (link.name) {
@@ -554,24 +543,9 @@ createApp({
             case "Miscellaneous":
               link.name = "Divers";
               break;
-            // Ajoutez d'autres cas pour les autres noms
           }
         });
-        setTimeout(() => {
-          this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
-          }, 1000);
-        
-          setTimeout(() => {
-            this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
-          }, 1500);
-        
-          setTimeout(() => {
-            this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
-          }, 2000);
-        
-          setTimeout(() => {
-            this.getHomepageDatas2();
-          }, 400);
+        this.fetchData();
       }
     },
     /////////////Change Country////////////////
@@ -580,24 +554,51 @@ createApp({
       this.hpDatasQuerie = [];
       this.isQuerie = false;
       this.country = pays;
-      if((pays === 'fr') && (this.language === "fr")){
-        // this.language = "fr-fr";
+      if(this.country === "fr"){
+        this.language = "fr";
+        this.navLinks.forEach(link => {
+          switch (link.name) {
+            case "Music":
+              link.name = "Musique";
+              break;
+            case "Arts and Theatre":
+              link.name = "Arts et théâtre";
+              break;
+            case "Movies":
+              link.name = "Films";
+              break;
+            case "Sports":
+              link.name = "Sports";
+              break;
+            case "Miscellaneous":
+              link.name = "Divers";
+              break;
+          }
+        });
       }
-      setTimeout(() => {
-        this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
-        }, 1000);
-      
-        setTimeout(() => {
-          this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
-        }, 1500);
-      
-        setTimeout(() => {
-          this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
-        }, 2000);
-      
-        setTimeout(() => {
-          this.getHomepageDatas2();
-        }, 400);
+      this.fetchData();
+    },
+    /////////////get datas on launch////////////////
+    async fetchData(){
+      try {
+        const response1 = await this.getHomepageDatas2();
+        await this.delay(500);
+        const response2 = await this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
+        await this.delay(1000);
+        const response3 = await this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
+        await this.delay(1500);
+        const response4 = await this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
+      } catch (error) {
+        // Gérez les erreurs ici
+      }
+    },
+    async delay(ms){
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    // Scroll bar
+    updateScrollBarWidth() {
+      const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      this.barWidth = scrollPercentage;
     },
   },
   mounted(){
@@ -641,26 +642,11 @@ createApp({
     }
 
     window.addEventListener("scroll", this.handleScroll);
-   
-    setTimeout(() => {
-    this.getHomepageDatas("this.hpDatasMusic", idSegmentMusic);
-    }, 1000);
-  
-    setTimeout(() => {
-      this.getHomepageDatas("this.hpDatasArt", idSegmentArt);
-    }, 1500);
-  
-    setTimeout(() => {
-      this.getHomepageDatas("this.hpDatasSport", idSegmentSport);
-    }, 2000);
-  
-    // setTimeout(() => {
-      this.getHomepageDatas2();
-    // }, 400);
-
+    this.fetchData();
     // Disable overlay when mobile menu open and resize
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
+    window.addEventListener('scroll', this.updateScrollBarWidth);
   },
   watch: {
     isQuerie(value) {

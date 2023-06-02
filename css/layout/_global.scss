@@ -58,3 +58,13 @@ body{
   width: 100%;
   background-color: #BFBFBF;
 }
+.scroll-bar{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 7px;
+  z-index: 2;
+  background-color: #0d80fa;
+  transition: height 0.3s ease;
+}
