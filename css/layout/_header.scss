@@ -4,7 +4,7 @@
   }
   background-color: #121212;
   color: #fff;
-  padding: 10px 20px;
+  padding: 7px 20px;
   font-size: 16px;
   font-weight: 300;
   ul{
@@ -94,6 +94,9 @@
     &__title{
       font-size: calc(23px + 1vw);
       font-weight: 500;
+      @media screen and (max-width:720px){
+        font-size: calc(18px + 1vw);
+      }
     }
   }
 }
