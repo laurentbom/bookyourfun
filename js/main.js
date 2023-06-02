@@ -22,7 +22,6 @@ const idSegmentAttractions = "KZFzniwnSyZfZ7v7n1";
 const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
 // rZ7SnyZ1AdbP0S
-// import axios from 'axios';
 
 function test(){
   fetch(`${apiUrl}/events/rZ7SnyZ1AdbNCA?apikey=${apiKey}&locale=en`)
@@ -293,11 +292,9 @@ createApp({
       this.closeNav();
       let url = ""
       const filteredEvents = [];
-      if(typeQuerie === "genre"){
-        url = `https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&size=5&countryCode=${this.country}&genreId=${id}&locale=${this.language}`;
-      } else if (typeQuerie === "classification"){
-        url = `https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&size=5&countryCode=${this.country}&classificationId=${id}&locale=${this.language}`;
-      }
+      
+      url = `https://app.ticketmaster.com/discovery/v2/events?apikey=${apiKey}&size=5&countryCode=${this.country}&classificationId=${id}&locale=${this.language}`;
+
       fetch(`${url}`)
         .then(response => response.json())
         .then(data => {
@@ -658,10 +655,10 @@ createApp({
       }
     },
     language(newLanguage) {
-      localStorage.setItem('language', newLanguage); // Stocke la nouvelle valeur de 'language' dans le localStorage
+      localStorage.setItem('language', newLanguage); 
     },
     country(newCountry) {
-      localStorage.setItem('country', newCountry); // Stocke la nouvelle valeur de 'language' dans le localStorage
+      localStorage.setItem('country', newCountry); 
     },
   },
   // beforeDestroy() {

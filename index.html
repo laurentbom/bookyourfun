@@ -104,14 +104,14 @@
         </div>
     </nav>
     <!-- Header -->
-    <header v-if="hpDatasUpcoming" class="header" @click="closeNav" :style="'background:url(' + urlImgHeader + ') center/cover'">
+    <header v-if="hpDatasUpcoming" class="header" :style="'background:url(' + urlImgHeader + ') center/cover'">
         <div class="header__content flex-c">
             <h2 class="header__content__title">{{titleHeader}}</h2>
             <a :href="urlHeader" class="header__content__btn btn" id="headerBtn">Tickets</a>
         </div>
     </header>
     <!-- Main -->
-    <main class="main" @click="closeNav">
+    <main class="main">
         <!-- Main container -->
         <div class="main__container">
             <!-- Queries section -->
@@ -274,7 +274,7 @@
         <div class="scroll-bar" :style="{ width: barWidth + '%' }"></div>
     </main>
     <!-- Footer -->
-    <footer class="footer" @click="closeNav">
+    <footer class="footer">
         <!-- Content -->
         <div>
             <div class="footer__top">
