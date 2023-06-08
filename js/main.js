@@ -381,7 +381,7 @@ createApp({
             .then(data => {
               if (data._embedded.events != undefined) {
                 this.searchAllResults = data._embedded.events;
-
+                this.searchError = false;
                 // Filtrer les événements par nom unique
                 const uniqueNames = new Set();
                 this.searchResults = this.searchAllResults.filter(event => {
