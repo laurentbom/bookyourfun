@@ -3,12 +3,22 @@
 // Laurent Bomal 2023
 // Vue.js
 // 
-// - Responsive Treshold & delay request API
-// - Get segments & genres for main nav
-// - Mobile menu
-// - Get segments & genres for footer nav Desktop
-// - Get segments & genres for footer nav Mobile
-// - Get Homepage Data
+// - Close Nav & Modal
+// - Open mobile menu
+// - Get Hompage Datas
+// - Datas form (date & time)
+// - Querie modal
+// - Close & pagination Queries
+// - Search suggestions
+// - Search
+// - Disable overlay when mobile menu open and resize
+// - To the top button
+// - Change language
+// - Change country
+// - Get datas on launch
+// - Scroll bar
+// - Local storage
+// - Watch scroll
 // 
 //////////////////////////////////////////////////////
 
@@ -21,18 +31,17 @@ const idSegmentArt = "KZFzniwnSyZfZ7v7na";
 const idSegmentAttractions = "KZFzniwnSyZfZ7v7n1";
 const idSegmentFilms = "KZFzniwnSyZfZ7v7nn";
 
-// rZ7SnyZ1AdbP0S
 
-function test(){
-  fetch(`${apiUrl}/events/rZ7SnyZ1AdbNCA?apikey=${apiKey}&locale=en`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.error("Erreur lors de la récupération des données :", error); 
-      });
-}
+// function test(){
+//   fetch(`${apiUrl}/events/rZ7SnyZ1AdbNCA?apikey=${apiKey}&locale=en`)
+//       .then(response => response.json())
+//       .then(data => {
+//         console.log(data);
+//       })
+//       .catch(error => {
+//         console.error("Erreur lors de la récupération des données :", error); 
+//       });
+// }
 // test()
 
 ////////////////////App Vue////////////////////////
@@ -69,6 +78,7 @@ createApp({
       searchQuery: "",
       searchResults: [],
       searchAllResults: [],
+      searchError: false,
       modalOpen : false,
       modalDatas : null,
       overlay : false,
@@ -194,7 +204,6 @@ createApp({
         }
         this.hpDatasSuggest = filteredEventsAside;
         this.hpDatasUpcoming = filteredEvents;
-        // console.log(this.hpDatasUpcoming)
         this.urlImgHeader = this.hpDatasUpcoming[0].filteredImage.url;
         this.titleHeader = this.hpDatasUpcoming[0].name;
         this.urlHeader = this.hpDatasUpcoming[0].url;
@@ -202,28 +211,6 @@ createApp({
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
       });
-
-      //  Aside
-      // fetch(`${apiUrl}/events?apikey=${apiKey}&classificationId=KZFzniwnSyZfZ7v7nn&countryCode=${this.country}&sort=random&size=5&locale=${this.language}`)
-      // .then(response => response.json())
-      // .then(data => {
-      //   // console.log(data)
-      //   const filteredEvents = [];
-      //   const eventNames = new Set(); // Utiliser un Set pour stocker les noms uniques
-      //   for (const event of data._embedded.events) {
-      //     const filteredImages = event.images.filter(image => image.width >= 1024);
-      //     if (!eventNames.has(event.name) && filteredImages.length > 0) {
-      //       event.filteredImage = filteredImages[0];
-      //       filteredEvents.push(event);
-      //       eventNames.add(event.name);
-      //     }
-      //   }
-      //   this.hpDatasSuggest = filteredEvents;
-      //   // console.log(this.hpDatasSuggest)
-      // })
-      // .catch(error => {
-      //   console.error("Erreur lors de la récupération des données :", error); 
-      // });
     },
     /////////////////Datas form/////////////////
     // Date
@@ -253,7 +240,6 @@ createApp({
         fetch(`${apiUrl}/events/${id}?apikey=${apiKey}&locale=${this.language}`)
         .then(response => response.json())
         .then(data => {
-          // console.log(data)
           this.modalDatas = data;
           // Date
           this.modalDatas.filteredDate = this.formatDate(this.modalDatas.dates.start.localDate);
@@ -286,8 +272,7 @@ createApp({
       });
     },
     ////////////////////////////////////
-    subnavQuerie(id,typeQuerie){
-      // this.genres = [];
+    subnavQuerie(id){
       this.hpDatasQuerie = [];
       this.closeNav();
       let url = ""
@@ -298,7 +283,6 @@ createApp({
       fetch(`${url}`)
         .then(response => response.json())
         .then(data => {
-          // console.log(data);
           this.isQuerie = true;
 
           if(data._links.next && data._links.next.href !== undefined){
@@ -328,7 +312,6 @@ createApp({
           this.resultsNumber = data.page.totalElements;
           const querieSection = this.$refs.item;
           querieSection.scrollIntoView({behavior: 'smooth'});
-          // console.log(this.hpDatasQuerie)
         })
         .catch(error => {
           console.error("Erreur lors de la récupération des donnéess :", error); 
@@ -352,7 +335,6 @@ createApp({
         fetch(`https://app.ticketmaster.com${url}&apikey=${apiKey}`)
         .then(response => response.json())
         .then(data => {
-          // console.log(data);
           if(data._links.next && data._links.next.href !== undefined){
             this.querieNextPage = data._links.next.href;
             this.showPaginationNext = true
@@ -382,7 +364,6 @@ createApp({
           }
           
           this.hpDatasQuerie = filteredEvents;
-          // console.log(this.hpDatasQuerie)
           })
           .catch(error => {
             console.error("Erreur lors de la récupération des données :", error); 
@@ -398,7 +379,6 @@ createApp({
           fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&includeSpellcheck=yes&countryCode=${this.country}&locale=${this.language}`)
             .then(response => response.json())
             .then(data => {
-              // console.log(data)
               if (data._embedded.events != undefined) {
                 this.searchAllResults = data._embedded.events;
 
@@ -415,7 +395,7 @@ createApp({
               }
             })
             .catch(error => {
-              console.error('Erreur lors de la recherche:', error);
+              // console.error('Erreur lors de la recherche:', error);
               this.searchResults = []; // Réinitialiser les résultats en cas d'erreur
             });
         }, 400); // Délai de latence de 300 millisecondes
@@ -423,19 +403,24 @@ createApp({
         this.searchResults = []; // Réinitialiser les résultats si la requête est trop courte
       }
     },
-    ////////////////Search ////////////////////
+    ////////////////Search////////////////////
     searchWord(){
-      const querieSection = this.$refs.item;
-      querieSection.scrollIntoView({behavior: 'smooth'});
-      this.isQuerie = true;
       this.searchResults = [];
       this.hpDatasQuerie = [];
       const filteredEvents = [];
-
+      this.searchError = false;
       fetch(`${apiUrl}/events?apikey=${apiKey}&keyword=${this.searchQuery}&size=5&sort=date,asc&countryCode=${this.country}&locale=${this.language}`)
       .then(response => response.json())
       .then(data => {
-        // console.log(data)
+        if(data._embedded){
+          // const querieSection = this.$refs.item;
+          // querieSection.scrollIntoView({behavior: 'smooth'});
+          this.isQuerie = true;
+        } else {
+          this.isQuerie = false;
+          this.searchError = true;
+          this.searchQuery = "";
+        }
         if(data._links.next && data._links.next.href !== undefined){
           this.querieNextPage = data._links.next.href;
           this.showPaginationNext = true
@@ -464,8 +449,6 @@ createApp({
         
         this.hpDatasQuerie = filteredEvents;
         this.resultsNumber = data.page.totalElements;
-
-        // console.log(this.hpDatasQuerie)
       })
       .catch(error => {
         console.error("Erreur lors de la récupération des données :", error); 
@@ -575,7 +558,7 @@ createApp({
       }
       this.fetchData();
     },
-    /////////////get datas on launch////////////////
+    /////////////Get datas on launch////////////////
     async fetchData(){
       try {
         const response1 = await this.getHomepageDatas2();
@@ -592,13 +575,14 @@ createApp({
     async delay(ms){
       return new Promise(resolve => setTimeout(resolve, ms));
     },
-    // Scroll bar
+    /////////////Scroll bar////////////////
     updateScrollBarWidth() {
       const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
       this.barWidth = scrollPercentage;
     },
   },
   mounted(){
+    /////////////Local storage////////////////
     const storedLanguage = localStorage.getItem('language');
     const storedCountry = localStorage.getItem('country');
     if(storedCountry){
@@ -637,9 +621,9 @@ createApp({
           break;
       }
     }
-
-    window.addEventListener("scroll", this.handleScroll);
     this.fetchData();
+    /////////////Watch scroll////////////////
+    window.addEventListener("scroll", this.handleScroll);
     // Disable overlay when mobile menu open and resize
     window.addEventListener('resize', this.handleResize);
     this.handleResize();

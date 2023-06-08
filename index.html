@@ -96,6 +96,9 @@
                 <input v-else v-model="searchQuery" @input="performSearch" @keyup.enter="searchWord" type="text" placeholder="Search by artist, event">
                 <ul>
                     <li v-if="searchQuery.length >= 1 && searchResults.length == 0" class="searchInputInfo"><p v-if="language === 'fr'">Taper au moins un mot</p><p v-else>At least one word</p></li>
+                    <li v-if="searchError & searchQuery.length == 0" class="searchError">
+                        <p v-if="language === 'fr'">Pas de résultats</p><p v-else>No results</p>
+                    </li>
                     <li v-if="searchResults.length > 0" class="searchInputInfo">Suggestions</li>
                     <li  v-if="searchResults.length > 0" v-for="searchResult in searchResults" :key="searchResult.id" @click="modalLaunch(searchResult.id)"><a href="#">{{searchResult.name}}</a></li>
                 </ul>
